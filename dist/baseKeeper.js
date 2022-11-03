@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseKeeper = void 0;
 const EventEmitter = require("events");
 const el_logger_1 = require("el-logger");
 class BaseKeeper extends EventEmitter {

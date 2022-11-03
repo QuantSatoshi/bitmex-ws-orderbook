@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.reverseBuildIndex = exports.buildFromOrderedOb = exports.findBestAsk = exports.findBestBid = void 0;
 const _ = require("lodash");
 function findBestBid(splitIndex, storedObsOrdered) {
     let i = splitIndex;

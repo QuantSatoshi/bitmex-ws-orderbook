@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.idToPrice = void 0;
 const BITMEX_ID_TO_PRICE_CONVERSION = {
     ETH: [29700000000, 20],
     BTC: [8800000000, 100],

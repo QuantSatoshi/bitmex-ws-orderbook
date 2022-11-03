@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BinanceFxObKeeper = exports.binanceObToStandardOb = void 0;
 const genericObKeeper_1 = require("./genericObKeeper");
 const _ = require("lodash");
 const autoParseFloat = (v) => (_.isString(v) ? parseFloat(v) : v);

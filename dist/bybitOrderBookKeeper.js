@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BybitOrderBookKeeper = void 0;
 const _ = require("lodash");
 const bitmex_request_1 = require("bitmex-request");
 const qsJsUtils = require("qs-js-utils");
@@ -170,7 +171,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
             const obFromRealtime = this.getOrderBookWs(pairEx);
             if (obFromRealtime && obFromRealtime.bids.length > 0 && obFromRealtime.asks.length > 0) {
                 if (verifyWithPoll) {
-                    parsingUtils_1.verifyObPollVsObWs(obPoll, obFromRealtime);
+                    (0, parsingUtils_1.verifyObPollVsObWs)(obPoll, obFromRealtime);
                 }
                 return obFromRealtime;
             }

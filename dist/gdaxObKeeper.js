@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GdaxObKeeper = void 0;
 const _ = require("lodash");
 const baseKeeper_1 = require("./baseKeeper");
 const genericObKeeperShared_1 = require("./utils/genericObKeeperShared");

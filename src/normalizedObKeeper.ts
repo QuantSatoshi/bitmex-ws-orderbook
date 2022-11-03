@@ -1,4 +1,4 @@
-import { OrderBookItem } from 'qs-typings';
+import { OrderBookItem, ObStreamShared } from 'qs-typings';
 import { GenericObKeeper } from './genericObKeeper';
 import * as _ from 'lodash';
 
@@ -25,15 +25,6 @@ import * as _ from 'lodash';
   ]
 }
  */
-
-export interface ObStreamShared {
-  c: number; // pair code
-  pair?: string; // override
-  b: number[][]; // price, amount, sorted from best to worst
-  a: number[][]; // price, amount, sorted from best to worst
-  ts: number; // timestamp in ms
-  e: 's' | 'u'; // snapshot, update
-}
 
 export function normalizedObToStandardOb(v: number[]): OrderBookItem {
   return { r: v[0], a: v[1] };

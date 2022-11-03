@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GenericObKeeperShared = void 0;
 const _ = require("lodash");
 const searchUtils_1 = require("qs-js-utils/dist/utils/searchUtils");
 class GenericObKeeperShared {
@@ -46,7 +47,7 @@ class GenericObKeeperShared {
                     bid.a > 0 && this.bids.unshift(bid);
                 }
                 else {
-                    const foundIndex = searchUtils_1.sortedFindFirstSmallerEqual(this.bids, bid.r, b => b.r);
+                    const foundIndex = (0, searchUtils_1.sortedFindFirstSmallerEqual)(this.bids, bid.r, b => b.r);
                     if (foundIndex === -1) {
                         console.error(`invalid condition, did not found index bid`, bid, this.bids);
                     }
@@ -88,7 +89,7 @@ class GenericObKeeperShared {
                     ask.a > 0 && this.asks.unshift(ask);
                 }
                 else {
-                    const foundIndex = searchUtils_1.sortedFindFirstGreaterEqual(this.asks, ask.r, a => a.r);
+                    const foundIndex = (0, searchUtils_1.sortedFindFirstGreaterEqual)(this.asks, ask.r, a => a.r);
                     if (foundIndex === -1) {
                         console.error(`invalid condition, did not found index ask`, ask, this.asks);
                     }

@@ -31,7 +31,7 @@
     "el-logger": "1.0.4",
     "lodash": "4.17.19",
     "qs-js-utils": "^0.0.2",
-    "qs-typings": "^0.0.1"
+    "qs-typings": "0.0.4"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",
@@ -43,7 +43,7 @@
     "prettier": "^1.16.4",
     "rimraf": "^3.0.0",
     "ts-jest": "^24.2.0",
-    "typescript": "^3.7.2",
+    "typescript": "4.8",
     "websocket-reconnect": "^1.0.2",
     "ws": "^7.0.0"
   }

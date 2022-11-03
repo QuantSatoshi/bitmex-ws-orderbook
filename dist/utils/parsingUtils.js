@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.sortByDesc = exports.sortByAsc = exports.sortOrderBooks = exports.verifyObPollVsObWs = exports.isObItemEqual = exports.isObAmountEqual = exports.isObPriceEqual = void 0;
 function isObPriceEqual(ob1, ob2) {
     if (ob1.r !== ob2.r)
         return false;

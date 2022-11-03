@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GenericObKeeper = void 0;
 const baseKeeper_1 = require("./baseKeeper");
 const genericObKeeperShared_1 = require("./utils/genericObKeeperShared");
 class GenericObKeeper extends baseKeeper_1.BaseKeeper {

@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BybitOrderBookKeeper = void 0;
 const _ = require("lodash");
 const bitmex_request_1 = require("bitmex-request");
 const qsJsUtils = require("qs-js-utils");
@@ -98,7 +99,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
                 this.searchAndInsertObRow(newRowRef, pair);
             });
             // reverse build index
-            orderdOrderbookUtils_1.reverseBuildIndex(this.storedObsOrdered[pair], this.storedObs[pair]);
+            (0, orderdOrderbookUtils_1.reverseBuildIndex)(this.storedObsOrdered[pair], this.storedObs[pair]);
         }
         else if (obs.type === 'delta') {
             let pair = _pair;
@@ -138,7 +139,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
             });
             // reverse build index
             if (pair && !_.isEmpty(obs.data.insert)) {
-                orderdOrderbookUtils_1.reverseBuildIndex(this.storedObsOrdered[pair], this.storedObs[pair]);
+                (0, orderdOrderbookUtils_1.reverseBuildIndex)(this.storedObsOrdered[pair], this.storedObs[pair]);
             }
             _.each(obs.data.delete, row => {
                 pair = _pair || row.symbol;
@@ -164,7 +165,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         const askUnsortedRaw = _.filter(dataRaw, o => o.s === 1 && o.a > 0);
         const bidsUnsorted = _.map(bidsUnsortedRaw, d => ({ r: +d.r, a: d.a }));
         const asksUnsorted = _.map(askUnsortedRaw, d => ({ r: +d.r, a: d.a }));
-        const sortedOb = parsingUtils_1.sortOrderBooks({
+        const sortedOb = (0, parsingUtils_1.sortOrderBooks)({
             pair,
             ts: this.lastObWsTime,
             bids: bidsUnsorted,
@@ -174,11 +175,11 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
     }
     findBestBid(pair) {
         const splitIndex = this.getSplitIndex(pair);
-        return orderdOrderbookUtils_1.findBestBid(splitIndex, this.storedObsOrdered[pair]);
+        return (0, orderdOrderbookUtils_1.findBestBid)(splitIndex, this.storedObsOrdered[pair]);
     }
     findBestAsk(pair) {
         const splitIndex = this.getSplitIndex(pair);
-        return orderdOrderbookUtils_1.findBestAsk(splitIndex, this.storedObsOrdered[pair]);
+        return (0, orderdOrderbookUtils_1.findBestAsk)(splitIndex, this.storedObsOrdered[pair]);
     }
     getOrderBookWs(pair, depth = 25) {
         const dataRaw = this.storedObs[pair];
@@ -186,7 +187,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
             return null;
         const bidI = this.findBestBid(pair).i;
         const askI = this.findBestAsk(pair).i;
-        const { bids, asks } = orderdOrderbookUtils_1.buildFromOrderedOb({ bidI, askI, depth, storedObsOrdered: this.storedObsOrdered[pair] });
+        const { bids, asks } = (0, orderdOrderbookUtils_1.buildFromOrderedOb)({ bidI, askI, depth, storedObsOrdered: this.storedObsOrdered[pair] });
         // temp
         const verifyWithOldMethod = false;
         if (verifyWithOldMethod && asks.length > 0 && bids.length > 0) {
@@ -234,7 +235,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
             const obFromRealtime = this.getOrderBookWs(pairEx);
             if (obFromRealtime && obFromRealtime.bids.length > 0 && obFromRealtime.asks.length > 0) {
                 if (verifyWithPoll) {
-                    parsingUtils_1.verifyObPollVsObWs(obPoll, obFromRealtime);
+                    (0, parsingUtils_1.verifyObPollVsObWs)(obPoll, obFromRealtime);
                 }
                 return obFromRealtime;
             }

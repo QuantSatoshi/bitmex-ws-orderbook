@@ -39,7 +39,7 @@ describe('bitmex ob keeper', () => {
   it(`works with snapshot`, () => {
     keeper.onReceiveOb(obs[0] as any, pair);
     const ob = keeper.getOrderBookWs(pair);
-    delete ob.ts;
+    delete (ob as any).ts;
     expect(ob).toMatchSnapshot();
   });
 
@@ -47,7 +47,7 @@ describe('bitmex ob keeper', () => {
     keeper.onReceiveOb(obs[0] as any, pair);
     keeper.onReceiveOb(obs[1] as any, pair);
     const ob = keeper.getOrderBookWs(pair);
-    delete ob.ts;
+    delete (ob as any).ts;
     expect(ob).toMatchSnapshot();
   });
 
@@ -55,7 +55,7 @@ describe('bitmex ob keeper', () => {
     keeper.onReceiveOb(obs[0] as any, pair);
     keeper.onReceiveOb(obs[2] as any, pair);
     const ob = keeper.getOrderBookWs(pair);
-    delete ob.ts;
+    delete (ob as any).ts;
     expect(ob).toMatchSnapshot();
   });
 
