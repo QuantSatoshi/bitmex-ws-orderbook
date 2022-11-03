@@ -1,7 +1,7 @@
 import { BybitRequest } from 'bitmex-request';
 import { BybitOb } from './types/bybit.type';
 import { InternalOb } from './types/shared.type';
-import { OrderBookSchema } from 'bitmex-request';
+import { OrderBookSchema } from 'bitmex-request/dist/sharedTypes';
 import { BaseKeeper } from './baseKeeper';
 export declare namespace BybitOrderBookKeeper {
     interface Options extends BaseKeeper.Options {

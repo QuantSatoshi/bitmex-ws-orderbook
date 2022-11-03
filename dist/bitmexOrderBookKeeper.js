@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
 const bitmex_request_1 = require("bitmex-request");
-const traderUtils = require("./utils/traderUtils");
+const qsJsUtils = require("qs-js-utils");
 const parsingUtils_1 = require("./utils/parsingUtils");
 const bitmexUtils_1 = require("./utils/bitmexUtils");
 const baseKeeper_1 = require("./baseKeeper");
@@ -238,7 +238,7 @@ class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
     // Get WS ob, and fall back to poll. also verify ws ob with poll ob
     getOrderBook(pairEx, forcePoll) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (forcePoll || !traderUtils.isTimeWithinRange(this.lastObWsTime, this.VALID_OB_WS_GAP)) {
+            if (forcePoll || !qsJsUtils.isTimeWithinRange(this.lastObWsTime, this.VALID_OB_WS_GAP)) {
                 if (!forcePoll)
                     this.logger.warn(`lastObWsTime=${this.lastObWsTime} is outdated, polling instead`);
                 return yield this.pollOrderBookWithRateLimit(pairEx);

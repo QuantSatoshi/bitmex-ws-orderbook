@@ -1,4 +1,4 @@
-import { OrderBookItem } from 'bitmex-request';
+import { OrderBookItem } from 'bitmex-request/dist/sharedTypes';
 import { GenericObKeeper } from './genericObKeeper';
 export interface ObStream {
     e: string;

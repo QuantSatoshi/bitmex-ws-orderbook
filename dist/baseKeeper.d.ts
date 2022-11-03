@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import * as EventEmitter from 'events';
 import { Logger, RateLimit } from 'el-logger';
-import { OrderBookSchema } from 'bitmex-request';
+import { OrderBookSchema } from 'bitmex-request/dist/sharedTypes';
 export declare namespace BaseKeeper {
     interface Options {
         enableEvent?: boolean;

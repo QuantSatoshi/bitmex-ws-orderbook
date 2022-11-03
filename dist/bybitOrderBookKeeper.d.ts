@@ -1,6 +1,6 @@
 import { BybitRequest } from 'bitmex-request';
 import { BybitOb } from './types/bybit.type';
-import { OrderBookItem, OrderBookSchema } from 'bitmex-request';
+import { OrderBookItem, OrderBookSchema } from 'bitmex-request/dist/sharedTypes';
 import { BaseKeeper } from './baseKeeper';
 import { GenericObKeeperShared } from './utils/genericObKeeperShared';
 export declare namespace BybitOrderBookKeeper {

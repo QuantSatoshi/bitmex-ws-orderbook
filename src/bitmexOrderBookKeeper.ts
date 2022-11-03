@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
-import { BitmexRequest } from 'bitmex-request/dist/sharedTypes';
-import * as traderUtils from './utils/traderUtils';
+import { BitmexRequest } from 'bitmex-request';
+import * as qsJsUtils from 'qs-js-utils';
 import { sortByAsc, sortByDesc, verifyObPollVsObWs } from './utils/parsingUtils';
 import { idToPrice } from './utils/bitmexUtils';
 import { BitmexOb } from './types/bitmex.type';
@@ -242,7 +242,7 @@ export class BitmexOrderBookKeeper extends BaseKeeper {
 
   // Get WS ob, and fall back to poll. also verify ws ob with poll ob
   async getOrderBook(pairEx: string, forcePoll?: boolean): Promise<OrderBookSchema> {
-    if (forcePoll || !traderUtils.isTimeWithinRange(this.lastObWsTime, this.VALID_OB_WS_GAP)) {
+    if (forcePoll || !qsJsUtils.isTimeWithinRange(this.lastObWsTime, this.VALID_OB_WS_GAP)) {
       if (!forcePoll) this.logger.warn(`lastObWsTime=${this.lastObWsTime} is outdated, polling instead`);
       return await this.pollOrderBookWithRateLimit(pairEx);
     }
