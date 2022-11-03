@@ -4,7 +4,7 @@ import * as qsJsUtils from 'qs-js-utils';
 import { sortOrderBooks, verifyObPollVsObWs } from './utils/parsingUtils';
 import { BybitOb } from './types/bybit.type';
 import { InternalOb } from './types/shared.type';
-import { OrderBookItem, OrderBookSchema } from 'bitmex-request/dist/sharedTypes';
+import { OrderBookItem, OrderBookSchema } from 'qs-typings';
 import { BaseKeeper } from './baseKeeper';
 import { buildFromOrderedOb, findBestAsk, findBestBid, reverseBuildIndex } from './utils/orderdOrderbookUtils';
 const { searchUtils } = qsJsUtils;

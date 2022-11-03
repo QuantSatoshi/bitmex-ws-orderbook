@@ -1,4 +1,4 @@
-import { OrderBookItem } from 'bitmex-request/dist/sharedTypes';
+import { OrderBookItem } from 'qs-typings';
 export declare class GenericObKeeperShared {
     protected bids: OrderBookItem[];
     protected asks: OrderBookItem[];

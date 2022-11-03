@@ -1,4 +1,4 @@
-import { OrderBookSchema, OrderBookItem } from 'bitmex-request/dist/sharedTypes';
+import { OrderBookSchema, OrderBookItem } from 'qs-typings';
 import { BaseKeeper } from './baseKeeper';
 /**
  * [ 11153,

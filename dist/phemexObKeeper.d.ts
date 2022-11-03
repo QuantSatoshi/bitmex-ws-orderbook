@@ -1,4 +1,4 @@
-import { OrderBookItem } from 'bitmex-request/dist/sharedTypes';
+import { OrderBookItem } from 'qs-typings';
 import { GenericObKeeper } from './genericObKeeper';
 export declare namespace PhemexObKeeper {
     interface ObRes {

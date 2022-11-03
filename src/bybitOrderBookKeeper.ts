@@ -3,7 +3,7 @@ import { BybitRequest } from 'bitmex-request';
 import * as qsJsUtils from 'qs-js-utils';
 import { verifyObPollVsObWs } from './utils/parsingUtils';
 import { BybitOb } from './types/bybit.type';
-import { OrderBookItem, OrderBookSchema } from 'bitmex-request/dist/sharedTypes';
+import { OrderBookItem, OrderBookSchema } from 'qs-typings';
 import { BaseKeeper } from './baseKeeper';
 import { GenericObKeeperShared } from './utils/genericObKeeperShared';
 

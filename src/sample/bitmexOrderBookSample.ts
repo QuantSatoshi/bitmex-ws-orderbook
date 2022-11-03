@@ -1,6 +1,6 @@
 import { BitmexOrderBookKeeper } from '../index';
 import { WsReconnect } from 'websocket-reconnect';
-import { OrderBookSchema } from 'bitmex-request/dist/sharedTypes';
+import { OrderBookSchema } from 'qs-typings';
 
 (() => {
   const WS_URL_TESTNET = 'wss://testnet.bitmex.com/realtime';

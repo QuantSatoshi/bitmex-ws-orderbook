@@ -1,6 +1,6 @@
 import { BitmexRequest } from 'bitmex-request';
 import { BitmexOb } from './types/bitmex.type';
-import { OrderBookSchema } from 'bitmex-request/dist/sharedTypes';
+import { OrderBookSchema } from 'qs-typings';
 import { BaseKeeper } from './baseKeeper';
 import { InternalOb } from './types/shared.type';
 export declare namespace BitmexOrderBookKeeper {

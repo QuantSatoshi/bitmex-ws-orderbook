@@ -1,4 +1,4 @@
-import { OrderBookItem, OrderBookSchema } from 'bitmex-request/dist/sharedTypes';
+import { OrderBookItem, OrderBookSchema } from 'qs-typings';
 export declare function isObPriceEqual(ob1: OrderBookItem, ob2: OrderBookItem): boolean;
 export declare function isObAmountEqual(ob1: OrderBookItem, ob2: OrderBookItem): boolean;
 export declare function isObItemEqual(ob1: OrderBookItem, ob2: OrderBookItem): false | typeof isObAmountEqual;

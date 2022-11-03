@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { OrderBookItem } from 'bitmex-request/dist/sharedTypes';
+import { OrderBookItem } from 'qs-typings';
 import { sortedFindFirstGreaterEqual, sortedFindFirstSmallerEqual } from 'qs-js-utils/dist/utils/searchUtils';
 
 export class GenericObKeeperShared {

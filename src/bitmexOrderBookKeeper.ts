@@ -4,7 +4,7 @@ import * as qsJsUtils from 'qs-js-utils';
 import { sortByAsc, sortByDesc, verifyObPollVsObWs } from './utils/parsingUtils';
 import { idToPrice } from './utils/bitmexUtils';
 import { BitmexOb } from './types/bitmex.type';
-import { OrderBookItem, OrderBookSchema } from 'bitmex-request/dist/sharedTypes';
+import { OrderBookItem, OrderBookSchema } from 'qs-typings';
 import { BaseKeeper } from './baseKeeper';
 import { searchUtils } from 'qs-js-utils';
 import { InternalOb } from './types/shared.type';
