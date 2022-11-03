@@ -6,10 +6,9 @@ import { idToPrice } from './utils/bitmexUtils';
 import { BitmexOb } from './types/bitmex.type';
 import { OrderBookItem, OrderBookSchema } from 'bitmex-request/dist/sharedTypes';
 import { BaseKeeper } from './baseKeeper';
-import { sortedFindIndex } from './utils/searchUtils';
+import { searchUtils } from 'qs-js-utils';
 import { InternalOb } from './types/shared.type';
 import { findBestBid, findBestAsk, buildFromOrderedOb, reverseBuildIndex } from './utils/orderdOrderbookUtils';
-
 // new method is much much faster than old one
 const USING_NEW_METHOD = true;
 
@@ -95,7 +94,7 @@ export class BitmexOrderBookKeeper extends BaseKeeper {
         } else {
           // try to find the price using binary search first. slightly faster.
           const foundIndex =
-            action === 'insert' ? sortedFindIndex(this.storedObsOrdered[pair], row.price, x => x.r) : -1;
+            action === 'insert' ? searchUtils.sortedFindIndex(this.storedObsOrdered[pair], row.price, x => x.r) : -1;
           if (foundIndex !== -1) {
             this.storedObsOrdered[pair][foundIndex] = newRowRef;
           } else {
@@ -132,7 +131,7 @@ export class BitmexOrderBookKeeper extends BaseKeeper {
           // get price from id and insert this price
           const isEth = !!pair.match(/ETH/);
           const price = idToPrice(isEth ? 'ETH' : 'BTC', row.id);
-          const foundIndex = sortedFindIndex(this.storedObsOrdered[pair], price, x => x.r);
+          const foundIndex = searchUtils.sortedFindIndex(this.storedObsOrdered[pair], price, x => x.r);
           this.storedObs[pair][String(row.id)] = this.bitmexObToInternalOb({ ...row, price });
           const newRowRef = this.storedObs[pair][String(row.id)];
           if (foundIndex !== -1) {

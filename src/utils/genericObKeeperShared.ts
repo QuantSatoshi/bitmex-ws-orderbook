@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { OrderBookItem } from 'bitmex-request/dist/sharedTypes';
-import { sortedFindFirstGreaterEqual, sortedFindFirstSmallerEqual } from './searchUtils';
+import { sortedFindFirstGreaterEqual, sortedFindFirstSmallerEqual } from 'qs-js-utils/dist/utils/searchUtils';
 
 export class GenericObKeeperShared {
   protected bids: OrderBookItem[] = [];

@@ -14,8 +14,8 @@ const bitmex_request_1 = require("bitmex-request");
 const qsJsUtils = require("qs-js-utils");
 const parsingUtils_1 = require("./utils/parsingUtils");
 const baseKeeper_1 = require("./baseKeeper");
-const searchUtils_1 = require("./utils/searchUtils");
 const orderdOrderbookUtils_1 = require("./utils/orderdOrderbookUtils");
+const { searchUtils } = qsJsUtils;
 class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
     constructor(options) {
         super(options);
@@ -65,7 +65,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         }
         else {
             // try to find the price using binary search first. slightly faster.
-            const foundIndex = searchUtils_1.sortedFindIndex(this.storedObsOrdered[pair], newRowRef.r, x => x.r);
+            const foundIndex = searchUtils.sortedFindIndex(this.storedObsOrdered[pair], newRowRef.r, x => x.r);
             if (foundIndex !== -1) {
                 this.storedObsOrdered[pair][foundIndex] = newRowRef;
             }

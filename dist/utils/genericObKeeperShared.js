@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
-const searchUtils_1 = require("./searchUtils");
+const searchUtils_1 = require("qs-js-utils/dist/utils/searchUtils");
 class GenericObKeeperShared {
     constructor() {
         this.bids = [];

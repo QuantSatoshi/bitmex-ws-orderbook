@@ -6,9 +6,8 @@ import { BybitOb } from './types/bybit.type';
 import { InternalOb } from './types/shared.type';
 import { OrderBookItem, OrderBookSchema } from 'bitmex-request/dist/sharedTypes';
 import { BaseKeeper } from './baseKeeper';
-import { sortedFindIndex } from './utils/searchUtils';
 import { buildFromOrderedOb, findBestAsk, findBestBid, reverseBuildIndex } from './utils/orderdOrderbookUtils';
-
+const { searchUtils } = qsJsUtils;
 export namespace BybitOrderBookKeeper {
   export interface Options extends BaseKeeper.Options {
     testnet?: boolean;
@@ -68,7 +67,7 @@ export class BybitOrderBookKeeper extends BaseKeeper {
       this.storedObsOrdered[pair].unshift(newRowRef);
     } else {
       // try to find the price using binary search first. slightly faster.
-      const foundIndex = sortedFindIndex(this.storedObsOrdered[pair], newRowRef.r, x => x.r);
+      const foundIndex = searchUtils.sortedFindIndex(this.storedObsOrdered[pair], newRowRef.r, x => x.r);
       if (foundIndex !== -1) {
         this.storedObsOrdered[pair][foundIndex] = newRowRef;
       } else {
