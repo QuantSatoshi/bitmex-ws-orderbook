@@ -8,11 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseKeeper = void 0;
-const EventEmitter = require("events");
+const events_1 = __importDefault(require("events"));
 const el_logger_1 = require("el-logger");
-class BaseKeeper extends EventEmitter {
+class BaseKeeper extends events_1.default {
     constructor(options) {
         super();
         this.name = 'default'; // override this

@@ -1,4 +1,4 @@
-import * as EventEmitter from 'events';
+import EventEmitter from 'events';
 import { Logger, RateLimit } from 'el-logger';
 import { OrderBookSchema } from 'qs-typings';
 

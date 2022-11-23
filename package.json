@@ -44,7 +44,7 @@
     "rimraf": "^3.0.0",
     "ts-jest": "^24.2.0",
     "typescript": "4.8",
-    "websocket-reconnect": "^1.0.2",
+    "websocket-reconnect": "^1.0.7",
     "ws": "^7.0.0"
   }
 }
