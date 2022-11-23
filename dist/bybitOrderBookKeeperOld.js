@@ -190,7 +190,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         const asksUnsorted = _.map(askUnsortedRaw, d => ({ r: +d.r, a: d.a }));
         const sortedOb = (0, parsingUtils_1.sortOrderBooks)({
             pair,
-            ts: this.lastObWsTime,
+            ts: this.lastObWsTime.getTime(),
             bids: bidsUnsorted,
             asks: asksUnsorted,
         });
@@ -225,7 +225,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         }
         return {
             pair,
-            ts: this.lastObWsTime,
+            ts: this.lastObWsTime.getTime(),
             bids,
             asks,
         };

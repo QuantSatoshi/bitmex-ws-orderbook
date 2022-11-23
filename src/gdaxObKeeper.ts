@@ -112,7 +112,7 @@ export class GdaxObKeeper extends BaseKeeper {
   getOrderBookWs(pair: string, depth = 25) {
     const orderbooks: OrderBookSchema = {
       ...this.obKeepers[pair].getOb(depth),
-      ts: new Date(),
+      ts: Date.now(),
       pair,
     };
     if (orderbooks.asks.length == 0 || orderbooks.bids.length === 0) {

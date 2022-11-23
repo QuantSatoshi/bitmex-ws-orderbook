@@ -102,7 +102,7 @@ class GdaxObKeeper extends baseKeeper_1.BaseKeeper {
         };
     }
     getOrderBookWs(pair, depth = 25) {
-        const orderbooks = Object.assign(Object.assign({}, this.obKeepers[pair].getOb(depth)), { ts: new Date(), pair });
+        const orderbooks = Object.assign(Object.assign({}, this.obKeepers[pair].getOb(depth)), { ts: Date.now(), pair });
         if (orderbooks.asks.length == 0 || orderbooks.bids.length === 0) {
             this.logger.error(`coinbase invalid bids or asks this.obCache[pair] ${pair}`);
         }

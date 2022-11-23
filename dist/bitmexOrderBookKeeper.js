@@ -212,7 +212,7 @@ class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         }));
         return {
             pair,
-            ts: this.lastObWsTime,
+            ts: this.lastObWsTime.getTime(),
             bids,
             asks,
         };
@@ -236,7 +236,7 @@ class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
             }
             return {
                 pair,
-                ts: this.lastObWsTime,
+                ts: this.lastObWsTime.getTime(),
                 bids,
                 asks,
             };

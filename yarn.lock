@@ -2897,10 +2897,10 @@ qs-js-utils@^0.0.2:
   resolved "https://registry.yarnpkg.com/qs-js-utils/-/qs-js-utils-0.0.2.tgz#987bd75c5b6621664fcc3adf5114c3943e8bf0de"
   integrity sha512-1ADhqLBw2hmCpWQJRqa9X/goiWn3F7SnEgDlVnwZ0zHalmvXcyNjUAffHG9V9+0kOYPEPZoXKtpLR8Ls5oLLOw==
 
-qs-typings@0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/qs-typings/-/qs-typings-0.0.4.tgz#20fe44d2dd8eda45ae869d008b18b831784fcb70"
-  integrity sha512-dTY5wmS/QjKhbJ2fKESHBbyCJNR3fsRRkP+n5VU5Jhm4i0efTDl+5ZFDy6nn75w0Q8sFUa+/Z5DauAdW/TXaWg==
+qs-typings@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/qs-typings/-/qs-typings-0.0.9.tgz#7fce60bff91fffc8a5e8097db1c3f809a064ebc8"
+  integrity sha512-SaCM/hvk6zDKJ2NpP0Pt+HM5vKHl3vaVeB54dLkYG8pLYtFoUFJSX37s1KCFOqrUsjjr+Mz+Fgf9hia+qGAE6Q==
 
 qs@~6.5.2:
   version "6.5.3"

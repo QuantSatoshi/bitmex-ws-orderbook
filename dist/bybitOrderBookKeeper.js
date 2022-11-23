@@ -67,13 +67,13 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
     getOrderBookWs(pair, depth) {
         if (!this.obKeepers[pair]) {
             return {
-                ts: new Date(),
+                ts: Date.now(),
                 pair,
                 bids: [],
                 asks: [],
             };
         }
-        const orderbooks = Object.assign({ ts: new Date(), pair }, this.obKeepers[pair].getOb(depth));
+        const orderbooks = Object.assign({ ts: Date.now(), pair }, this.obKeepers[pair].getOb(depth));
         return orderbooks;
     }
     onOrderBookUpdated(callback) {

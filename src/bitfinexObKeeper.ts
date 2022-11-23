@@ -116,7 +116,7 @@ export class BitfinexObKeeper extends BaseKeeper {
 
   getOrderBookWs(pair: string) {
     const orderbooks: OrderBookSchema = {
-      ts: new Date(),
+      ts: Date.now(),
       pair,
       bids: _.filter(this.obCache[pair], ob => ob[2] > 0).map(this.formatOrderBookItem),
       asks: _.filter(this.obCache[pair], ob => ob[2] < 0).map(this.formatOrderBookItem),

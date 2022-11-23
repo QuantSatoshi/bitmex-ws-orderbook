@@ -191,7 +191,7 @@ export class BitmexOrderBookKeeper extends BaseKeeper {
 
     return {
       pair,
-      ts: this.lastObWsTime!,
+      ts: this.lastObWsTime!.getTime(),
       bids,
       asks,
     };
@@ -215,7 +215,7 @@ export class BitmexOrderBookKeeper extends BaseKeeper {
       }
       return {
         pair,
-        ts: this.lastObWsTime!,
+        ts: this.lastObWsTime!.getTime(),
         bids,
         asks,
       };

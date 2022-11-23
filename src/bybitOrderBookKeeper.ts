@@ -35,7 +35,7 @@ export class BybitOrderBookKeeper extends BaseKeeper {
   getOrderBookWs(pair: string, depth?: number): OrderBookSchema {
     if (!this.obKeepers[pair]) {
       return {
-        ts: new Date(),
+        ts: Date.now(),
         pair,
         bids: [],
         asks: [],
@@ -43,7 +43,7 @@ export class BybitOrderBookKeeper extends BaseKeeper {
     }
 
     const orderbooks: OrderBookSchema = {
-      ts: new Date(),
+      ts: Date.now(),
       pair,
       ...this.obKeepers[pair].getOb(depth),
     };

@@ -32,7 +32,7 @@
     "el-logger": "1.0.4",
     "lodash": "4.17.21",
     "qs-js-utils": "^0.0.2",
-    "qs-typings": "0.0.4"
+    "qs-typings": "^0.0.9"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",

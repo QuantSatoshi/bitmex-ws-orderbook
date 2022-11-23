@@ -172,7 +172,7 @@ export class BybitOrderBookKeeper extends BaseKeeper {
 
     const sortedOb = sortOrderBooks({
       pair,
-      ts: this.lastObWsTime!,
+      ts: this.lastObWsTime!.getTime(),
       bids: bidsUnsorted,
       asks: asksUnsorted,
     });
@@ -218,7 +218,7 @@ export class BybitOrderBookKeeper extends BaseKeeper {
     }
     return {
       pair,
-      ts: this.lastObWsTime!,
+      ts: this.lastObWsTime!.getTime(),
       bids,
       asks,
     };
