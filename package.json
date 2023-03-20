@@ -9,6 +9,7 @@
     "build": "rimraf dist && tsc && rimraf dist/sample",
     "tsc": "tsc",
     "tsc:watch": "tsc -w",
+    "updateProd": "bash ops/updateProd.sh",
     "prettier": "node ./node_modules/prettier/bin-prettier.js --parser=typescript --single-quote --trailing-comma=all --write --print-width=120 'src/**/*.ts'",
     "test": "jest",
     "test:watch": "jest --watch"
