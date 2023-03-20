@@ -51,8 +51,8 @@ class GenericObKeeperShared {
             }
         }
         for (let bid of params.bids) {
-            if (!bid || !bid.r) {
-                console.error(`invalid bid`, bid);
+            if (!bid || !bid.r || isNaN(bid.r)) {
+                console.error(`onReceiveOb invalid bid`, bid);
                 continue;
             }
             if (this.bids.length === 0) {
@@ -96,8 +96,8 @@ class GenericObKeeperShared {
             }
         }
         for (let ask of params.asks) {
-            if (!ask || !ask.r) {
-                console.error(`invalid ask`, ask);
+            if (!ask || !ask.r || isNaN(ask.r)) {
+                console.error(`onReceiveOb invalid ask`, ask);
                 continue;
             }
             // ask ordered from best to worst, from lowest to highest.
