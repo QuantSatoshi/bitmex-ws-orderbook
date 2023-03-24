@@ -25,6 +25,7 @@ class BaseKeeper extends events_1.default {
         this.enableEvent = options.enableEvent || false;
         this.silentMode = options.silentMode || false;
         this.logger = new el_logger_1.Logger({ name: this.name });
+        this.maxLevels = options.maxLevels;
     }
     initLogger() {
         this.logger = new el_logger_1.Logger({ name: this.name });

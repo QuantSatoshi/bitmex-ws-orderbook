@@ -37,13 +37,18 @@ class BinanceFxObKeeper extends genericObKeeper_1.GenericObKeeper {
             if (data.e === 'depthUpdate') {
                 // some delete are always in bid, but should be in ask instead
                 // bids ordered from low to high, worst to best
-                const bids = data.b ? data.b.map(binanceObToStandardOb) : [];
+                let b = data.b ? data.b.reverse() : [];
+                let a = data.a ? data.a : [];
+                if (this.maxLevels) {
+                    b = b.slice(0, this.maxLevels);
+                    a = a.slice(0, this.maxLevels);
+                }
+                const bids = b.map(binanceObToStandardOb);
                 // asks ordered from high to low, best to worst
-                const asks = data.a ? data.a.map(binanceObToStandardOb) : [];
+                const asks = a.map(binanceObToStandardOb);
                 const pair = pairDb || data.s.toUpperCase();
                 const currentOb = this.getOrderBookWs(pair);
-                for (let i = bids.length - 1; i >= 0; i--) {
-                    const bid = bids[i];
+                for (let bid of bids) {
                     if (currentOb.asks[0] && bid.a === 0 && bid.r >= currentOb.asks[0].r) {
                         asks.unshift(bid);
                         // console.log(`BinanceFxObKeeper moving bid ${JSON.stringify(bid)} to ask topAsk=${currentOb.asks[0].r}`);
@@ -63,7 +68,7 @@ class BinanceFxObKeeper extends genericObKeeper_1.GenericObKeeper {
                 }
                 this.onReceiveOb({
                     pair,
-                    bids: bids.reverse(),
+                    bids: bids,
                     asks,
                 });
             }

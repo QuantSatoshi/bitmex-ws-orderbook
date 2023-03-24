@@ -6,6 +6,7 @@ export namespace BaseKeeper {
   export interface Options {
     enableEvent?: boolean;
     silentMode?: boolean;
+    maxLevels?: number;
   }
 }
 export class BaseKeeper extends EventEmitter {
@@ -15,12 +16,14 @@ export class BaseKeeper extends EventEmitter {
   cachedPollOrderBook: Record<string, OrderBookSchema> = {};
   protected enableEvent: boolean;
   protected silentMode: boolean;
+  protected maxLevels?: number;
 
   constructor(options: BaseKeeper.Options) {
     super();
     this.enableEvent = options.enableEvent || false;
     this.silentMode = options.silentMode || false;
     this.logger = new Logger({ name: this.name });
+    this.maxLevels = options.maxLevels;
   }
 
   initLogger() {
