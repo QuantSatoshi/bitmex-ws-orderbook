@@ -35,11 +35,11 @@ class GenericObKeeperShared {
         this.bids = [];
         this.asks = [];
     }
-    // if initial, return true
+    // assume bids and asks are both ordered from best to worst
     onReceiveOb(params) {
         // deal with special cases, the bid cannot be greater than ask.
         if (params.asks.length > 0) {
-            const firstNonZeroAsk = _.find(params.asks, bid => bid.a > 0);
+            const firstNonZeroAsk = _.find(params.asks, x => x.a > 0);
             while (firstNonZeroAsk && this.bids.length > 0 && this.bids[0].r >= firstNonZeroAsk.r) {
                 this.bids.splice(0, 1);
             }

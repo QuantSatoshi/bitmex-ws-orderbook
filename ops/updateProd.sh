@@ -6,3 +6,6 @@ gsed -i "s/bitmex-ws-orderbook\.git#.*\"/bitmex-ws-orderbook\.git#${VERSION}\"/g
 
 gsed -i "s/bitmex-ws-orderbook\.git#.*\"/bitmex-ws-orderbook\.git#${VERSION}\"/g" ../ex-core/package.json
 gsed -i "s/bitmex-ws-orderbook\.git#.*\"/bitmex-ws-orderbook\.git#${VERSION}\"/g" ../ex-core/yarn.lock
+
+gsed -i "s/bitmex-ws-orderbook\.git#.*\"/bitmex-ws-orderbook\.git#${VERSION}\"/g" ../ammarb/package.json
+gsed -i "s/bitmex-ws-orderbook\.git#.*\"/bitmex-ws-orderbook\.git#${VERSION}\"/g" ../ammarb/yarn.lock

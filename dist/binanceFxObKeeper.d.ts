@@ -13,5 +13,5 @@ export interface ObStream {
 }
 export declare function binanceObToStandardOb(v: (number | string)[]): OrderBookItem;
 export declare class BinanceFxObKeeper extends GenericObKeeper {
-    onSocketMessage(msg: any, pairDb?: string): void;
+    onSocketMessage(data: ObStream, pairDb?: string): void;
 }
