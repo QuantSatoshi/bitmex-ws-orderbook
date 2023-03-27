@@ -7,6 +7,7 @@ export declare namespace BaseKeeper {
         enableEvent?: boolean;
         silentMode?: boolean;
         maxLevels?: number;
+        minObEventGapMs?: number;
     }
 }
 export declare class BaseKeeper extends EventEmitter {
@@ -17,6 +18,8 @@ export declare class BaseKeeper extends EventEmitter {
     protected enableEvent: boolean;
     protected silentMode: boolean;
     protected maxLevels?: number;
+    protected lastEventTsMap: Record<string, number>;
+    protected minObEventGapMs: number;
     constructor(options: BaseKeeper.Options);
     initLogger(): void;
     onOrderBookUpdated(callback: (ob: OrderBookSchema) => any): void;

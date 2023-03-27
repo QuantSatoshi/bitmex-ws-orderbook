@@ -24,8 +24,17 @@ export class GenericObKeeper extends BaseKeeper {
     const asks = this.maxLevels ? params.asks.slice(0, this.maxLevels) : params.asks;
     this.obKeepers[pair].onReceiveOb({ bids, asks });
 
+    this.emitOrderbookEvent(pair);
+  }
+
+  emitOrderbookEvent(pair: string) {
     if (this.enableEvent) {
-      this.emit(`orderbook`, this.getOrderBookWs(pair));
+      const now = Date.now();
+      // only emit event at certain gap. prevent emitting even take over full cpu usage
+      if (!this.lastEventTsMap[pair] || now - this.lastEventTsMap[pair] > this.minObEventGapMs) {
+        this.lastEventTsMap[pair] = now;
+        this.emit(`orderbook`, this.getOrderBookWs(pair));
+      }
     }
   }
 

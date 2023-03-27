@@ -1,5 +1,5 @@
 {
-  "name": "bitmex-ws-orderbook",
+  "name": "qs-ws-orderbook",
   "version": "1.0.39",
   "private": true,
   "description": "",
@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/z-hao-wang/bitmex-ws-orderbook.git"
+    "url": "https://github.com/z-hao-wang/qs-ws-orderbook.git"
   },
   "peerDependencies": {
     "bitmex-request": "*"

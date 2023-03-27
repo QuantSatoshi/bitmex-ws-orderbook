@@ -7,6 +7,7 @@ export namespace BaseKeeper {
     enableEvent?: boolean;
     silentMode?: boolean;
     maxLevels?: number;
+    minObEventGapMs?: number;
   }
 }
 export class BaseKeeper extends EventEmitter {
@@ -17,6 +18,8 @@ export class BaseKeeper extends EventEmitter {
   protected enableEvent: boolean;
   protected silentMode: boolean;
   protected maxLevels?: number;
+  protected lastEventTsMap: Record<string, number> = {};
+  protected minObEventGapMs: number;
 
   constructor(options: BaseKeeper.Options) {
     super();
@@ -24,6 +27,7 @@ export class BaseKeeper extends EventEmitter {
     this.silentMode = options.silentMode || false;
     this.logger = new Logger({ name: this.name });
     this.maxLevels = options.maxLevels;
+    this.minObEventGapMs = options.minObEventGapMs || 200;
   }
 
   initLogger() {

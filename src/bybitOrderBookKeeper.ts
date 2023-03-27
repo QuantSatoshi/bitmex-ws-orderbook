@@ -157,7 +157,18 @@ export class BybitOrderBookKeeper extends BaseKeeper {
 
     if (this.enableEvent) {
       const pair = _pair || obs.topic.match(/orderBookL2_25\.(.*)/)![1];
-      this.emit(`orderbook`, this.getOrderBookWs(pair));
+      this.emitOrderbookEvent(pair);
+    }
+  }
+
+  emitOrderbookEvent(pair: string) {
+    if (this.enableEvent) {
+      const now = Date.now();
+      // only emit event at certain gap. prevent emitting even take over full cpu usage
+      if (!this.lastEventTsMap[pair] || now - this.lastEventTsMap[pair] > this.minObEventGapMs) {
+        this.lastEventTsMap[pair] = now;
+        this.emit(`orderbook`, this.getOrderBookWs(pair));
+      }
     }
   }
 
