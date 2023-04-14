@@ -63,5 +63,8 @@ class BaseKeeper extends events_1.default {
             }));
         });
     }
+    destroy() {
+        this.removeAllListeners("orderbook");
+    }
 }
 exports.BaseKeeper = BaseKeeper;

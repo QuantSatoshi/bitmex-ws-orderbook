@@ -65,4 +65,8 @@ export class BaseKeeper extends EventEmitter {
       }
     });
   }
+
+  destroy() {
+    this.removeAllListeners('orderbook');
+  }
 }

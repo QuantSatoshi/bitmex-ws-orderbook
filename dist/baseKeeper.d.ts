@@ -26,4 +26,5 @@ export declare class BaseKeeper extends EventEmitter {
     pollingRateLimiter: RateLimit;
     pollOrderBook(pairEx: string): Promise<OrderBookSchema>;
     pollOrderBookWithRateLimit(pairEx: string): Promise<OrderBookSchema>;
+    destroy(): void;
 }
