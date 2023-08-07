@@ -1,13 +1,12 @@
 import * as _ from 'lodash';
 import { BybitRequest } from 'bitmex-request';
-import * as qsJsUtils from 'qs-js-utils';
+import { sortedFindIndex, isTimeWithinRange } from 'qs-js-utils';
 import { sortOrderBooks, verifyObPollVsObWs } from './utils/parsingUtils';
 import { BybitOb } from './types/bybit.type';
 import { InternalOb } from './types/shared.type';
 import { OrderBookItem, OrderBookSchema } from 'qs-typings';
 import { BaseKeeper } from './baseKeeper';
 import { buildFromOrderedOb, findBestAsk, findBestBid, reverseBuildIndex } from './utils/orderdOrderbookUtils';
-const { searchUtils } = qsJsUtils;
 export namespace BybitOrderBookKeeper {
   export interface Options extends BaseKeeper.Options {
     testnet?: boolean;
@@ -67,7 +66,7 @@ export class BybitOrderBookKeeper extends BaseKeeper {
       this.storedObsOrdered[pair].unshift(newRowRef);
     } else {
       // try to find the price using binary search first. slightly faster.
-      const foundIndex = searchUtils.sortedFindIndex(this.storedObsOrdered[pair], newRowRef.r, x => x.r);
+      const foundIndex = sortedFindIndex(this.storedObsOrdered[pair], newRowRef.r, x => x.r);
       if (foundIndex !== -1) {
         this.storedObsOrdered[pair][foundIndex] = newRowRef;
       } else {
@@ -237,7 +236,7 @@ export class BybitOrderBookKeeper extends BaseKeeper {
 
   // Get WS ob, and fall back to poll. also verify ws ob with poll ob
   async getOrderBook(pairEx: string, forcePoll?: boolean): Promise<OrderBookSchema> {
-    if (forcePoll || !qsJsUtils.isTimeWithinRange(this.lastObWsTime, this.VALID_OB_WS_GAP)) {
+    if (forcePoll || !isTimeWithinRange(this.lastObWsTime, this.VALID_OB_WS_GAP)) {
       if (!forcePoll)
         this.logger.warn(
           `lastObWsTime=${this.lastObWsTime && this.lastObWsTime.toISOString()} is outdated diff=(${Date.now() -

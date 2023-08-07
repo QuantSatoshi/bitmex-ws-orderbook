@@ -11,4 +11,5 @@ export declare class GenericObKeeperShared {
         asks: OrderBookItem[];
         bids: OrderBookItem[];
     };
+    onReceiveTick(tick: number[]): void;
 }

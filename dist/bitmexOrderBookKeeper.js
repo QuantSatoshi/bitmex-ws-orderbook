@@ -114,7 +114,7 @@ class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
                 }
                 else {
                     // try to find the price using binary search first. slightly faster.
-                    const foundIndex = action === 'insert' ? qs_js_utils_1.searchUtils.sortedFindIndex(this.storedObsOrdered[pair], row.price, x => x.r) : -1;
+                    const foundIndex = action === 'insert' ? (0, qs_js_utils_1.sortedFindIndex)(this.storedObsOrdered[pair], row.price, x => x.r) : -1;
                     if (foundIndex !== -1) {
                         this.storedObsOrdered[pair][foundIndex] = newRowRef;
                     }
@@ -154,7 +154,7 @@ class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
                     // get price from id and insert this price
                     const isEth = !!pair.match(/ETH/);
                     const price = (0, bitmexUtils_1.idToPrice)(isEth ? 'ETH' : 'BTC', row.id);
-                    const foundIndex = qs_js_utils_1.searchUtils.sortedFindIndex(this.storedObsOrdered[pair], price, x => x.r);
+                    const foundIndex = (0, qs_js_utils_1.sortedFindIndex)(this.storedObsOrdered[pair], price, x => x.r);
                     this.storedObs[pair][String(row.id)] = this.bitmexObToInternalOb(Object.assign(Object.assign({}, row), { price }));
                     const newRowRef = this.storedObs[pair][String(row.id)];
                     if (foundIndex !== -1) {

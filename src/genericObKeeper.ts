@@ -27,6 +27,11 @@ export class GenericObKeeper extends BaseKeeper {
     this.emitOrderbookEvent(pair);
   }
 
+  onReceiveTick(pair:string, tick: number[]) {
+    this.obKeepers[pair].onReceiveTick(tick);
+    this.emitOrderbookEvent(pair);
+  }
+
   emitOrderbookEvent(pair: string) {
     if (this.enableEvent) {
       const now = Date.now();

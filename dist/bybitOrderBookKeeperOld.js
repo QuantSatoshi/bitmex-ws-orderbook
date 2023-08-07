@@ -35,11 +35,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BybitOrderBookKeeper = void 0;
 const _ = __importStar(require("lodash"));
 const bitmex_request_1 = require("bitmex-request");
-const qsJsUtils = __importStar(require("qs-js-utils"));
+const qs_js_utils_1 = require("qs-js-utils");
 const parsingUtils_1 = require("./utils/parsingUtils");
 const baseKeeper_1 = require("./baseKeeper");
 const orderdOrderbookUtils_1 = require("./utils/orderdOrderbookUtils");
-const { searchUtils } = qsJsUtils;
 class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
     constructor(options) {
         super(options);
@@ -89,7 +88,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         }
         else {
             // try to find the price using binary search first. slightly faster.
-            const foundIndex = searchUtils.sortedFindIndex(this.storedObsOrdered[pair], newRowRef.r, x => x.r);
+            const foundIndex = (0, qs_js_utils_1.sortedFindIndex)(this.storedObsOrdered[pair], newRowRef.r, x => x.r);
             if (foundIndex !== -1) {
                 this.storedObsOrdered[pair][foundIndex] = newRowRef;
             }
@@ -244,7 +243,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
     // Get WS ob, and fall back to poll. also verify ws ob with poll ob
     getOrderBook(pairEx, forcePoll) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (forcePoll || !qsJsUtils.isTimeWithinRange(this.lastObWsTime, this.VALID_OB_WS_GAP)) {
+            if (forcePoll || !(0, qs_js_utils_1.isTimeWithinRange)(this.lastObWsTime, this.VALID_OB_WS_GAP)) {
                 if (!forcePoll)
                     this.logger.warn(`lastObWsTime=${this.lastObWsTime && this.lastObWsTime.toISOString()} is outdated diff=(${Date.now() -
                         (this.lastObWsTime ? this.lastObWsTime.getTime() : 0)}), polling instead`);

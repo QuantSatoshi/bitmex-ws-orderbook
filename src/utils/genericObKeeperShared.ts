@@ -110,4 +110,33 @@ export class GenericObKeeperShared {
   getOb(depth?: number) {
     return { asks: depth ? this.asks.slice(0, depth) : this.asks, bids: depth ? this.bids.slice(0, depth) : this.bids };
   }
+
+  onReceiveTick(tick: number[]) {
+    const bidNew = tick[1];
+    const askNew = tick[2];
+    const bidVol = tick[3];
+    const askVol = tick[4];
+    let found = false;
+    for (let i = 0; i < this.bids.length; i++) {
+      // remove all bids that's higher than the bidNew
+      if (this.bids[i].r < bidNew && i !== 0) {
+        found =true;
+        this.bids = [{r: bidNew, a: bidVol}].concat(this.bids.slice(i));
+      }
+    }
+    if (!found) {
+      this.bids = [{r: bidNew, a: bidVol}];
+    }
+    found = false;
+    for (let i = 0; i < this.asks.length; i++) {
+      // remove all bids that's higher than the bidNew
+      if (this.asks[i].r > askNew && i !== 0) {
+        found = true;
+        this.asks = [{r: askNew, a: askVol}].concat(this.asks.slice(i));
+      }
+    }
+    if (!found) {
+      this.asks = [{r: askNew, a: askVol}];
+    }
+  }
 }
