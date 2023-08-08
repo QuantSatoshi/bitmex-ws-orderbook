@@ -120,23 +120,23 @@ export class GenericObKeeperShared {
     for (let i = 0; i < this.bids.length; i++) {
       // remove all bids that's higher than the bidNew
       if (this.bids[i].r < bidNew && i !== 0) {
-        found =true;
-        this.bids = [{r: bidNew, a: bidVol}].concat(this.bids.slice(i));
+        found = true;
+        this.bids = [{ r: bidNew, a: bidVol }].concat(this.bids.slice(i));
       }
     }
     if (!found) {
-      this.bids = [{r: bidNew, a: bidVol}];
+      this.bids = [{ r: bidNew, a: bidVol }];
     }
     found = false;
     for (let i = 0; i < this.asks.length; i++) {
       // remove all bids that's higher than the bidNew
       if (this.asks[i].r > askNew && i !== 0) {
         found = true;
-        this.asks = [{r: askNew, a: askVol}].concat(this.asks.slice(i));
+        this.asks = [{ r: askNew, a: askVol }].concat(this.asks.slice(i));
       }
     }
     if (!found) {
-      this.asks = [{r: askNew, a: askVol}];
+      this.asks = [{ r: askNew, a: askVol }];
     }
   }
 }

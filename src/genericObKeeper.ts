@@ -27,7 +27,10 @@ export class GenericObKeeper extends BaseKeeper {
     this.emitOrderbookEvent(pair);
   }
 
-  onReceiveTick(pair:string, tick: number[]) {
+  onReceiveTick(pair: string, tick: number[]) {
+    if (!this.obKeepers[pair]) {
+      this.obKeepers[pair] = new GenericObKeeperShared();
+    }
     this.obKeepers[pair].onReceiveTick(tick);
     this.emitOrderbookEvent(pair);
   }

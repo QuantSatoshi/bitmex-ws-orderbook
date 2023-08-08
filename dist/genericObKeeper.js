@@ -32,6 +32,9 @@ class GenericObKeeper extends baseKeeper_1.BaseKeeper {
         this.emitOrderbookEvent(pair);
     }
     onReceiveTick(pair, tick) {
+        if (!this.obKeepers[pair]) {
+            this.obKeepers[pair] = new genericObKeeperShared_1.GenericObKeeperShared();
+        }
         this.obKeepers[pair].onReceiveTick(tick);
         this.emitOrderbookEvent(pair);
     }
