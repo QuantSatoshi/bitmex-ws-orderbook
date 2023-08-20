@@ -63,3 +63,7 @@ export function sortByDesc(items: any[], key?: string) {
   }
   return items.sort((a, b) => b - a);
 }
+
+export function obLevelOneToTick(ob: OrderBookSchema): number[] {
+  return [ob.ts, ob.bids[0].r, ob.asks[0].r, ob.bids[0].a, ob.asks[0].a];
+}

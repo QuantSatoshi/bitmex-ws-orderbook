@@ -68,7 +68,7 @@ class BinanceFxObKeeper extends genericObKeeper_1.GenericObKeeper {
                 }
                 this.onReceiveOb({
                     pair,
-                    bids: bids,
+                    bids,
                     asks,
                 });
             }

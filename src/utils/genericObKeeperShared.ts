@@ -3,6 +3,7 @@ import { OrderBookItem } from 'qs-typings';
 import { sortedFindFirstGreaterEqual, sortedFindFirstSmallerEqual } from 'qs-js-utils/dist/utils/searchUtils';
 
 export class GenericObKeeperShared {
+  // TODO: in c++ change storage to be plain array
   protected bids: OrderBookItem[] = [];
   protected asks: OrderBookItem[] = [];
   init() {

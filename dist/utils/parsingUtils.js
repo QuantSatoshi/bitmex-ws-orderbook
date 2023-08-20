@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sortByDesc = exports.sortByAsc = exports.sortOrderBooks = exports.verifyObPollVsObWs = exports.isObItemEqual = exports.isObAmountEqual = exports.isObPriceEqual = void 0;
+exports.obLevelOneToTick = exports.sortByDesc = exports.sortByAsc = exports.sortOrderBooks = exports.verifyObPollVsObWs = exports.isObItemEqual = exports.isObAmountEqual = exports.isObPriceEqual = void 0;
 function isObPriceEqual(ob1, ob2) {
     if (ob1.r !== ob2.r)
         return false;
@@ -61,3 +61,7 @@ function sortByDesc(items, key) {
     return items.sort((a, b) => b - a);
 }
 exports.sortByDesc = sortByDesc;
+function obLevelOneToTick(ob) {
+    return [ob.ts, ob.bids[0].r, ob.asks[0].r, ob.bids[0].a, ob.asks[0].a];
+}
+exports.obLevelOneToTick = obLevelOneToTick;

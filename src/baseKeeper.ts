@@ -10,6 +10,7 @@ export namespace BaseKeeper {
     minObEventGapMs?: number;
   }
 }
+
 export class BaseKeeper extends EventEmitter {
   protected logger: Logger;
   lastObWsTime?: Date;

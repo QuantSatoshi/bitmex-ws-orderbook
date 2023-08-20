@@ -1,5 +1,5 @@
 import { InternalOb } from '../types/shared.type';
-import { OrderBookItem } from 'qs-typings';
+import { OrderBookItem, OrderBookSchema } from 'qs-typings';
 import * as _ from 'lodash';
 
 export function findBestBid(splitIndex: number, storedObsOrdered: InternalOb[]) {

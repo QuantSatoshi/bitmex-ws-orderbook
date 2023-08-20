@@ -6,3 +6,4 @@ export declare function verifyObPollVsObWs(obPoll: OrderBookSchema | undefined |
 export declare function sortOrderBooks(orderBooks: OrderBookSchema): OrderBookSchema;
 export declare function sortByAsc(items: any[], key?: string): any[];
 export declare function sortByDesc(items: any[], key?: string): any[];
+export declare function obLevelOneToTick(ob: OrderBookSchema): number[];

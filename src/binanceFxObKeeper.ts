@@ -78,7 +78,7 @@ export class BinanceFxObKeeper extends GenericObKeeper {
         }
         this.onReceiveOb({
           pair,
-          bids: bids, // reverse this to order from best to worst
+          bids, // reverse this to order from best to worst
           asks,
         });
       }

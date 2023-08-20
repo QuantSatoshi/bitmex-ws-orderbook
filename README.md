@@ -5,7 +5,7 @@ npm i bitmex-ws-orderbook
 ```
 Code
 ```
-import { BitmexOrderBookKeeper } from 'bitmex-ws-orderbook';
+import { BitmexOrderBookKeeper } from 'qs-ws-orderbook';
 const bitmexOb = new BitmexOrderBookKeeper({ testnet: true, enableEvent: true });
 bitmexOb.onSocketMessage(msg);
 const ob = await bitmexOb.getOrderBook('XBTUSD');

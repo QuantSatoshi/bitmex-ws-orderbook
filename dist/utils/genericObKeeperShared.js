@@ -28,6 +28,7 @@ const _ = __importStar(require("lodash"));
 const searchUtils_1 = require("qs-js-utils/dist/utils/searchUtils");
 class GenericObKeeperShared {
     constructor() {
+        // TODO: in c++ change storage to be plain array
         this.bids = [];
         this.asks = [];
     }
