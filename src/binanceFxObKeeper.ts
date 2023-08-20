@@ -45,7 +45,8 @@ export function binanceObToStandardOb(v: (number | string)[]): OrderBookItem {
 export class BinanceFxObKeeper extends GenericObKeeper {
   onSocketMessage(data: ObStream, pairDb?: string) {
     try {
-      if (data.e === 'depthUpdate') {
+      // data.e == u is internal db format
+      if (data.e === 'depthUpdate' || data.e == 'u') {
         // some delete are always in bid, but should be in ask instead
         // bids ordered from low to high, worst to best
         let b = data.b ? data.b.reverse() : [];

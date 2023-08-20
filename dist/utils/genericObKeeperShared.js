@@ -160,7 +160,7 @@ class GenericObKeeperShared {
         }
         found = false;
         for (let i = 0; i < this.asks.length; i++) {
-            // remove all bids that's higher than the bidNew
+            // remove all asks that's lower than the askNew
             if (this.asks[i].r > askNew && i !== 0) {
                 found = true;
                 this.asks = [{ r: askNew, a: askVol }].concat(this.asks.slice(i));

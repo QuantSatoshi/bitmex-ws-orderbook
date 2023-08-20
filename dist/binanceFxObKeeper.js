@@ -34,7 +34,8 @@ exports.binanceObToStandardOb = binanceObToStandardOb;
 class BinanceFxObKeeper extends genericObKeeper_1.GenericObKeeper {
     onSocketMessage(data, pairDb) {
         try {
-            if (data.e === 'depthUpdate') {
+            // data.e == u is internal db format
+            if (data.e === 'depthUpdate' || data.e == 'u') {
                 // some delete are always in bid, but should be in ask instead
                 // bids ordered from low to high, worst to best
                 let b = data.b ? data.b.reverse() : [];
