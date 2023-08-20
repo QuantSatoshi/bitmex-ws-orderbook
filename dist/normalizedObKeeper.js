@@ -54,11 +54,11 @@ function normalizedObToStandardOb(v) {
 }
 exports.normalizedObToStandardOb = normalizedObToStandardOb;
 class NormalizedObKeeper extends genericObKeeper_1.GenericObKeeper {
-    onData(data) {
+    onData(data, pair) {
         try {
             this.onReceiveOb({
                 isNewSnapshot: data.e === 's',
-                pair: data.pair || data.c.toString(),
+                pair: pair || data.pair || data.c.toString(),
                 bids: _.map(data.b, normalizedObToStandardOb),
                 asks: _.map(data.a, normalizedObToStandardOb),
             });

@@ -31,11 +31,11 @@ export function normalizedObToStandardOb(v: number[]): OrderBookItem {
 }
 
 export class NormalizedObKeeper extends GenericObKeeper {
-  onData(data: ObStreamShared) {
+  onData(data: ObStreamShared, pair?: string) {
     try {
       this.onReceiveOb({
         isNewSnapshot: data.e === 's',
-        pair: data.pair || data.c.toString(),
+        pair: pair || data.pair || data.c.toString(),
         bids: _.map(data.b, normalizedObToStandardOb),
         asks: _.map(data.a, normalizedObToStandardOb),
       });
