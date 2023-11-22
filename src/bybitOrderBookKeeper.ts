@@ -6,6 +6,7 @@ import { BybitOb } from './types/bybit.type';
 import { OrderBookItem, OrderBookSchema } from 'qs-typings';
 import { BaseKeeper } from './baseKeeper';
 import { GenericObKeeperShared } from './utils/genericObKeeperShared';
+import { binanceObToStandardOb } from './binanceFxObKeeper';
 
 export namespace BybitOrderBookKeeper {
   export interface Options extends BaseKeeper.Options {
@@ -95,6 +96,21 @@ export class BybitOrderBookKeeper extends BaseKeeper {
   }
 
   onReceiveOb(obs: BybitOb.OrderBooks, _pair?: string) {
+    const obNew = obs as any;
+    if (obNew.b || obNew.a) {
+      if (!_pair) throw new Error(`_pair is required for new ob type bybit`);
+      const pair = _pair;
+      this.onReceiveObShared({
+        pair,
+        bids: obNew.b ? obNew.b.map(binanceObToStandardOb) : [],
+        asks: obNew.a ? obNew.a.map(binanceObToStandardOb) : [],
+        isNewSnapshot: (obs as any).e === 's',
+      });
+      if (this.enableEvent) {
+        this.emitOrderbookEvent(pair);
+      }
+      return;
+    }
     // for rebuilding orderbook process.
     if (_.includes(['snapshot'], obs.type)) {
       // first init, refresh ob data.

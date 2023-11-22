@@ -39,6 +39,7 @@ const qsJsUtils = __importStar(require("qs-js-utils"));
 const parsingUtils_1 = require("./utils/parsingUtils");
 const baseKeeper_1 = require("./baseKeeper");
 const genericObKeeperShared_1 = require("./utils/genericObKeeperShared");
+const binanceFxObKeeper_1 = require("./binanceFxObKeeper");
 class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
     constructor(options) {
         super(options);
@@ -105,6 +106,19 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         }
     }
     onReceiveOb(obs, _pair) {
+        const obNew = obs;
+        if (obNew.b || obNew.a) {
+            if (!_pair)
+                throw new Error(`_pair is required for new ob type bybit`);
+            const pair = _pair;
+            this.onReceiveObShared({ pair, bids: obNew.b ? obNew.b.map(binanceFxObKeeper_1.binanceObToStandardOb) : [],
+                asks: obNew.a ? obNew.a.map(binanceFxObKeeper_1.binanceObToStandardOb) : [],
+                isNewSnapshot: obs.e === 's' });
+            if (this.enableEvent) {
+                this.emitOrderbookEvent(pair);
+            }
+            return;
+        }
         // for rebuilding orderbook process.
         if (_.includes(['snapshot'], obs.type)) {
             // first init, refresh ob data.
