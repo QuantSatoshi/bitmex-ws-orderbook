@@ -111,9 +111,12 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
             if (!_pair)
                 throw new Error(`_pair is required for new ob type bybit`);
             const pair = _pair;
-            this.onReceiveObShared({ pair, bids: obNew.b ? obNew.b.map(binanceFxObKeeper_1.binanceObToStandardOb) : [],
+            this.onReceiveObShared({
+                pair,
+                bids: obNew.b ? obNew.b.map(binanceFxObKeeper_1.binanceObToStandardOb) : [],
                 asks: obNew.a ? obNew.a.map(binanceFxObKeeper_1.binanceObToStandardOb) : [],
-                isNewSnapshot: obs.e === 's' });
+                isNewSnapshot: obs.e === 's',
+            });
             if (this.enableEvent) {
                 this.emitOrderbookEvent(pair);
             }
