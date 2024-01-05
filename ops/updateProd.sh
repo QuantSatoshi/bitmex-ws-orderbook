@@ -9,3 +9,4 @@ gsed -i "s/qs-ws-orderbook\.git#.*\"/qs-ws-orderbook\.git#${VERSION}\"/g" ../ex-
 
 gsed -i "s/qs-ws-orderbook\.git#.*\"/qs-ws-orderbook\.git#${VERSION}\"/g" ../ammarb/package.json
 gsed -i "s/qs-ws-orderbook\.git#.*\"/qs-ws-orderbook\.git#${VERSION}\"/g" ../ammarb/yarn.lock
+
