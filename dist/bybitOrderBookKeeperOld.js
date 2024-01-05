@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -33,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BybitOrderBookKeeper = void 0;
-const _ = __importStar(require("lodash"));
 const bitmex_request_1 = require("bitmex-request");
 const qs_js_utils_1 = require("qs-js-utils");
 const parsingUtils_1 = require("./utils/parsingUtils");
@@ -55,7 +31,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
     // either parsed object or raw text
     onSocketMessage(msg) {
         try {
-            const res = _.isString(msg) ? JSON.parse(msg) : msg;
+            const res = typeof msg === 'string' ? JSON.parse(msg) : msg;
             const pairMatch = res && res.topic.match(/^orderBookL2_25\.(.*)/);
             const pair = pairMatch && pairMatch[1];
             if (pair) {
@@ -80,10 +56,10 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         if (this.storedObsOrdered[pair].length === 0) {
             this.storedObsOrdered[pair].push(newRowRef);
         }
-        else if (newRowRef.r > _.last(this.storedObsOrdered[pair]).r) {
+        else if (newRowRef.r > (0, qs_js_utils_1.last)(this.storedObsOrdered[pair]).r) {
             this.storedObsOrdered[pair].push(newRowRef);
         }
-        else if (newRowRef.r < _.first(this.storedObsOrdered[pair]).r) {
+        else if (newRowRef.r < this.storedObsOrdered[pair][0].r) {
             this.storedObsOrdered[pair].unshift(newRowRef);
         }
         else {
@@ -105,7 +81,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
     }
     onReceiveOb(obs, _pair) {
         // for rebuilding orderbook process.
-        if (_.includes(['snapshot'], obs.type)) {
+        if (['snapshot'].includes(obs.type)) {
             // first init, refresh ob data.
             const obRows = obs.data;
             const pair = _pair || obRows[0].symbol;
@@ -114,7 +90,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
                 this.storedObs[pair] = {};
                 this.storedObsOrdered[pair] = [];
             }
-            _.each(obRows, row => {
+            obRows.forEach(row => {
                 const pair = _pair || row.symbol;
                 const newRowRef = this.toInternalOb(row);
                 this.storedObs[pair][String(row.id)] = newRowRef;
@@ -125,12 +101,12 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         }
         else if (obs.type === 'delta') {
             let pair = _pair;
-            if (!_.isEmpty(obs.data.insert)) {
+            if (obs.data.insert.length > 0) {
                 pair = _pair || obs.data.insert[0].symbol;
                 this.storedObs[pair] = this.storedObs[pair] || {};
                 this.storedObsOrdered[pair] = this.storedObsOrdered[pair] || [];
             }
-            _.each(obs.data.insert, row => {
+            obs.data.insert.forEach(row => {
                 pair = _pair || row.symbol;
                 const newRowRef = this.toInternalOb(row);
                 this.storedObs[pair][String(row.id)] = newRowRef;
@@ -141,7 +117,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
                 return;
             }
             // if this order exists, we update it, otherwise don't worry
-            _.each(obs.data.update, row => {
+            obs.data.update.forEach(row => {
                 pair = _pair || row.symbol;
                 if (this.storedObs[pair][String(row.id)]) {
                     // must update one by one because update doesn't contain price
@@ -160,10 +136,10 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
                 }
             });
             // reverse build index
-            if (pair && !_.isEmpty(obs.data.insert)) {
+            if (pair && obs.data.insert.length > 0) {
                 (0, orderdOrderbookUtils_1.reverseBuildIndex)(this.storedObsOrdered[pair], this.storedObs[pair]);
             }
-            _.each(obs.data.delete, row => {
+            obs.data.delete.forEach(row => {
                 pair = _pair || row.symbol;
                 if (!this.storedObs[pair]) {
                     console.error(`invalid ob for pair ${pair}`, this.storedObs[pair]);
@@ -183,10 +159,10 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         const dataRaw = this.storedObs[pair];
         if (!dataRaw)
             return null;
-        const bidsUnsortedRaw = _.filter(dataRaw, o => o.s === 0 && o.a > 0);
-        const askUnsortedRaw = _.filter(dataRaw, o => o.s === 1 && o.a > 0);
-        const bidsUnsorted = _.map(bidsUnsortedRaw, d => ({ r: +d.r, a: d.a }));
-        const asksUnsorted = _.map(askUnsortedRaw, d => ({ r: +d.r, a: d.a }));
+        const bidsUnsortedRaw = Object.values(dataRaw).filter(o => o.s === 0 && o.a > 0);
+        const askUnsortedRaw = Object.values(dataRaw).filter(o => o.s === 1 && o.a > 0);
+        const bidsUnsorted = bidsUnsortedRaw.map(d => ({ r: +d.r, a: d.a }));
+        const asksUnsorted = askUnsortedRaw.map(d => ({ r: +d.r, a: d.a }));
         const sortedOb = (0, parsingUtils_1.sortOrderBooks)({
             pair,
             ts: this.lastObWsTime.getTime(),
@@ -214,11 +190,11 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         const verifyWithOldMethod = false;
         if (verifyWithOldMethod && asks.length > 0 && bids.length > 0) {
             const oldOb = this.getOrderBookWsOld(pair, depth);
-            if (_.get(oldOb.asks[0], 'r') !== asks[0].r) {
+            if (oldOb.asks[0].r !== asks[0].r) {
                 console.error(`unmatching ob asks`, { oldAsks: oldOb.asks, oldbids: oldOb.bids, asks, bids }, this.storedObsOrdered[pair], this.storedObs[pair]);
                 process.exit(1);
             }
-            if (_.get(oldOb.bids[0], 'r') !== bids[0].r) {
+            if (oldOb.bids[0].r !== bids[0].r) {
                 console.error(`unmatching ob bids`, { oldAsks: oldOb.asks, oldbids: oldOb.bids, bids, asks });
             }
         }
@@ -237,7 +213,7 @@ class BybitOrderBookKeeper extends baseKeeper_1.BaseKeeper {
     }
     pollOrderBook(pairEx) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.bybitRequest.pollOrderBook(pairEx);
+            return (yield this.bybitRequest.pollOrderBook(pairEx));
         });
     }
     // Get WS ob, and fall back to poll. also verify ws ob with poll ob

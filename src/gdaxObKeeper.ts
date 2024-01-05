@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { OrderBookSchema, OrderBookItem } from 'qs-typings';
 import { BaseKeeper } from './baseKeeper';
 import { GenericObKeeperShared } from './utils/genericObKeeperShared';
@@ -48,14 +47,14 @@ export class GdaxObKeeper extends BaseKeeper {
 
   onSocketMessage(msg: any) {
     try {
-      const res: GdaxObKeeper.OrderBookRealtime = _.isString(msg) ? JSON.parse(msg) : msg;
+      const res: GdaxObKeeper.OrderBookRealtime = typeof msg === 'string' ? JSON.parse(msg) : msg;
       const { type, product_id: pair } = res;
       // this logic is similar with transaction_flow/ob_bitmex_fx.ts
       if (type === 'snapshot') {
         this.onReceiveOb({
           pair,
-          bids: _.map((res as GdaxObKeeper.OrderBookRealtimeSnap).bids, b => this.convertToObSchema(b)),
-          asks: _.map((res as GdaxObKeeper.OrderBookRealtimeSnap).asks, b => this.convertToObSchema(b)),
+          bids: (res as GdaxObKeeper.OrderBookRealtimeSnap).bids.map(b => this.convertToObSchema(b)),
+          asks: (res as GdaxObKeeper.OrderBookRealtimeSnap).asks.map(b => this.convertToObSchema(b)),
         });
       } else if (type === 'l2update') {
         this.performObUpdate(res as GdaxObKeeper.OrderBookRealtimeChange);
@@ -92,7 +91,7 @@ export class GdaxObKeeper extends BaseKeeper {
   performObUpdate(data: GdaxObKeeper.OrderBookRealtimeChange) {
     const pair = data.product_id;
     const { changes } = data;
-    _.each(changes, change => {
+    changes.forEach(change => {
       const side = change[0];
       const price = parseFloat(change[1]);
       const amount = parseFloat(change[2]);

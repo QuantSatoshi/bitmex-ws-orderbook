@@ -1,6 +1,5 @@
 import { OrderBookItem } from 'qs-typings';
 import { GenericObKeeper } from './genericObKeeper';
-import * as _ from 'lodash';
 
 /*
 {
@@ -37,7 +36,7 @@ export interface ObStream {
   b: string[][];
   a: string[][];
 }
-const autoParseFloat = (v: string | number): number => (_.isString(v) ? parseFloat(v) : v);
+const autoParseFloat = (v: string | number): number => (typeof v === 'string' ? parseFloat(v) : v);
 export function binanceObToStandardOb(v: (number | string)[]): OrderBookItem {
   return { r: autoParseFloat(v[0]), a: autoParseFloat(v[1]) };
 }

@@ -1,5 +1,5 @@
 import { BitfinexObKeeper } from '../bitfinexObKeeper';
-import * as _ from 'lodash';
+import { deepEqualLvOne } from 'qs-js-utils';
 
 describe('bitfinex ob keeper', () => {
   const pair = 'USD_BTC';
@@ -17,7 +17,7 @@ describe('bitfinex ob keeper', () => {
   it(`works with replacing`, () => {
     const keeper = new BitfinexObKeeper({});
     keeper.onReceiveOb(pair, obInitial);
-    expect(_.isEqual(keeper.obCache[pair], obInitial)).toBeTruthy();
+    expect(deepEqualLvOne(keeper.obCache[pair], obInitial)).toBeTruthy();
     keeper.onReceiveOb(pair, [152.51, 2, -12]);
     expect(keeper.obCache[pair][7]).toEqual([152.51, 2, -12]);
   });

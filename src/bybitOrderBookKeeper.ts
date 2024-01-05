@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { BybitRequest } from 'bitmex-request';
 import * as qsJsUtils from 'qs-js-utils';
 import { verifyObPollVsObWs } from './utils/parsingUtils';
@@ -73,7 +72,7 @@ export class BybitOrderBookKeeper extends BaseKeeper {
   // either parsed object or raw text
   onSocketMessage(msg: any) {
     try {
-      const res = _.isString(msg) ? JSON.parse(msg) : msg;
+      const res = typeof msg === 'string' ? JSON.parse(msg) : msg;
       if (!res.topic.match(/^orderBook/)) return;
 
       const pair = (() => {
@@ -112,13 +111,13 @@ export class BybitOrderBookKeeper extends BaseKeeper {
       return;
     }
     // for rebuilding orderbook process.
-    if (_.includes(['snapshot'], obs.type)) {
+    if (['snapshot'].includes(obs.type)) {
       // first init, refresh ob data.
       const obRows = (obs as BybitOb.OrderBooksNew).data;
       const pair = _pair || obRows[0].symbol;
       const bids: OrderBookItem[] = [];
       const asks: OrderBookItem[] = [];
-      _.each(obRows, row => {
+      obRows.forEach(row => {
         if (row.side === 'Buy') {
           bids.push({ r: parseFloat(row.price), a: row.size });
         } else {
@@ -132,7 +131,7 @@ export class BybitOrderBookKeeper extends BaseKeeper {
         const pair = _pair || insert[0].symbol;
         const bids: OrderBookItem[] = [];
         const asks: OrderBookItem[] = [];
-        _.each(insert, row => {
+        insert.forEach(row => {
           if (row.side === 'Buy') {
             bids.push({ r: parseFloat(row.price), a: row.size });
           } else {
@@ -146,7 +145,7 @@ export class BybitOrderBookKeeper extends BaseKeeper {
         const pair = _pair || update[0].symbol;
         const bids: OrderBookItem[] = [];
         const asks: OrderBookItem[] = [];
-        _.each(update, row => {
+        update.forEach(row => {
           if (row.side === 'Buy') {
             bids.push({ r: parseFloat(row.price), a: row.size });
           } else {
@@ -160,7 +159,7 @@ export class BybitOrderBookKeeper extends BaseKeeper {
         const pair = _pair || deleted[0].symbol;
         const bids: OrderBookItem[] = [];
         const asks: OrderBookItem[] = [];
-        _.each(deleted, row => {
+        deleted.forEach(row => {
           if (row.side === 'Buy') {
             bids.push({ r: parseFloat(row.price), a: 0 });
           } else {
@@ -189,7 +188,7 @@ export class BybitOrderBookKeeper extends BaseKeeper {
   }
 
   async pollOrderBook(pairEx: string): Promise<OrderBookSchema> {
-    return await this.bybitRequest.pollOrderBook(pairEx);
+    return (await this.bybitRequest.pollOrderBook(pairEx)) as any;
   }
 
   // Get WS ob, and fall back to poll. also verify ws ob with poll ob

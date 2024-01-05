@@ -1,6 +1,5 @@
 import { InternalOb } from '../types/shared.type';
 import { OrderBookItem, OrderBookSchema } from 'qs-typings';
-import * as _ from 'lodash';
 
 export function findBestBid(splitIndex: number, storedObsOrdered: InternalOb[]) {
   let i = splitIndex;
@@ -86,7 +85,7 @@ export function buildFromOrderedOb(params: {
 }
 
 export function reverseBuildIndex(storedObsOrdered: InternalOb[], storedObs: Record<string, InternalOb>) {
-  _.each(storedObsOrdered, (o, i) => {
+  storedObsOrdered.forEach((o, i) => {
     // undefined is allowed due to it can be deleted
     if (storedObs[String(o.id)]) {
       storedObs[String(o.id)].idx = i;

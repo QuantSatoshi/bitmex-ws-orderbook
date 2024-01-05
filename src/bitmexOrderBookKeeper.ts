@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { BitmexRequest } from 'bitmex-request';
 import * as qsJsUtils from 'qs-js-utils';
 import { sortByAsc, sortByDesc, verifyObPollVsObWs } from './utils/parsingUtils';
@@ -9,6 +8,7 @@ import { BaseKeeper } from './baseKeeper';
 import { sortedFindIndex } from 'qs-js-utils';
 import { InternalOb } from './types/shared.type';
 import { findBestBid, findBestAsk, buildFromOrderedOb, reverseBuildIndex } from './utils/orderdOrderbookUtils';
+const { last } = qsJsUtils;
 // new method is much much faster than old one
 const USING_NEW_METHOD = true;
 
@@ -51,7 +51,7 @@ export class BitmexOrderBookKeeper extends BaseKeeper {
   // either parsed object or raw text
   onSocketMessage(msg: any) {
     try {
-      const res = _.isString(msg) ? JSON.parse(msg) : msg;
+      const res = typeof msg === 'string' ? JSON.parse(msg) : msg;
       const { table, action, data } = res;
       // this logic is similar with transaction_flow/ob_bitmex_fx.ts
       if (table === 'orderBookL2_25' || table === 'orderBookL2') {
@@ -80,16 +80,16 @@ export class BitmexOrderBookKeeper extends BaseKeeper {
     }
     this.storedObs[pair] = this.storedObs[pair] || {};
     this.storedObsOrdered[pair] = this.storedObsOrdered[pair] || [];
-    if (_.includes(['partial', 'insert'], action)) {
+    if (['partial', 'insert'].includes(action)) {
       // first init, refresh ob data.
-      _.each(obRows, row => {
+      obRows.forEach(row => {
         this.storedObs[pair][String(row.id)] = this.bitmexObToInternalOb(row);
         const newRowRef = this.storedObs[pair][String(row.id)];
         if (this.storedObsOrdered[pair].length === 0) {
           this.storedObsOrdered[pair].push(newRowRef);
-        } else if (row.price > _.last(this.storedObsOrdered[pair])!.r) {
+        } else if (row.price > last(this.storedObsOrdered[pair])!.r) {
           this.storedObsOrdered[pair].push(newRowRef);
-        } else if (row.price < _.first(this.storedObsOrdered[pair])!.r) {
+        } else if (row.price < this.storedObsOrdered[pair][0]!.r) {
           this.storedObsOrdered[pair].unshift(newRowRef);
         } else {
           // try to find the price using binary search first. slightly faster.
@@ -118,7 +118,7 @@ export class BitmexOrderBookKeeper extends BaseKeeper {
       reverseBuildIndex(this.storedObsOrdered[pair], this.storedObs[pair]);
     } else if (action === 'update') {
       // if this order exists, we update it, otherwise don't worry
-      _.each(obRows, row => {
+      obRows.forEach(row => {
         if (this.storedObs[pair][String(row.id)]) {
           // must update one by one because update doesn't contain price
           const obRowInternal = this.bitmexObToInternalOb(row);
@@ -153,7 +153,7 @@ export class BitmexOrderBookKeeper extends BaseKeeper {
         }
       });
     } else if (action === 'delete') {
-      _.each(obRows, row => {
+      obRows.forEach(row => {
         if (this.storedObs[pair][String(row.id)]) {
           const idx = this.storedObs[pair][String(row.id)].idx!;
           this.storedObsOrdered[pair][idx].a = 0;
@@ -178,16 +178,20 @@ export class BitmexOrderBookKeeper extends BaseKeeper {
     const dataRaw = this.storedObs[pair];
     if (!dataRaw) return null;
     // old method, slow
-    const bidsUnsortedRaw = _.filter(dataRaw, o => o.s === 0 && o.a > 0);
-    const askUnsortedRaw = _.filter(dataRaw, o => o.s === 1 && o.a > 0);
-    const bids: OrderBookItem[] = _.map(sortByDesc(bidsUnsortedRaw, 'r').slice(0, depth), d => ({
-      r: d.r,
-      a: d.a,
-    }));
-    const asks: OrderBookItem[] = _.map(sortByAsc(askUnsortedRaw, 'r').slice(0, depth), d => ({
-      r: d.r,
-      a: d.a,
-    }));
+    const bidsUnsortedRaw = Object.values(dataRaw).filter(o => o.s === 0 && o.a > 0);
+    const askUnsortedRaw = Object.values(dataRaw).filter(o => o.s === 1 && o.a > 0);
+    const bids: OrderBookItem[] = sortByDesc(bidsUnsortedRaw, 'r')
+      .slice(0, depth)
+      .map(d => ({
+        r: d.r,
+        a: d.a,
+      }));
+    const asks: OrderBookItem[] = sortByAsc(askUnsortedRaw, 'r')
+      .slice(0, depth)
+      .map(d => ({
+        r: d.r,
+        a: d.a,
+      }));
 
     return {
       pair,
@@ -206,10 +210,10 @@ export class BitmexOrderBookKeeper extends BaseKeeper {
       const { bids, asks } = buildFromOrderedOb({ bidI, askI, depth, storedObsOrdered: this.storedObsOrdered[pair] });
       if (this.verifyWithOldMethod) {
         const oldOb = this.getOrderBookWsOld(pair, depth)!;
-        if (_.get(oldOb.asks[0], 'r') !== _.get(asks[0], 'r')) {
+        if (oldOb.asks[0].r !== asks[0].r) {
           console.error(`unmatching ob asks`, oldOb.asks, asks);
         }
-        if (_.get(oldOb.bids[0], 'r') !== _.get(bids[0], 'r')) {
+        if (oldOb.bids[0].r !== bids[0].r) {
           console.error(`unmatching ob bids`, oldOb.bids, bids);
         }
       }
@@ -236,7 +240,7 @@ export class BitmexOrderBookKeeper extends BaseKeeper {
   }
 
   async pollOrderBook(pairEx: string): Promise<OrderBookSchema> {
-    return await this.bitmexRequest.pollOrderBook(pairEx);
+    return (await this.bitmexRequest.pollOrderBook(pairEx)) as any;
   }
 
   // Get WS ob, and fall back to poll. also verify ws ob with poll ob

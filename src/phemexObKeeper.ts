@@ -1,6 +1,5 @@
 import { OrderBookItem } from 'qs-typings';
 import { GenericObKeeper } from './genericObKeeper';
-import * as _ from 'lodash';
 
 export namespace PhemexObKeeper {
   export interface ObRes {
@@ -25,7 +24,7 @@ export function phemexToStandardOb(v: number[]): OrderBookItem {
 export class PhemexObKeeper extends GenericObKeeper {
   onSocketMessage(msg: any) {
     try {
-      const res: PhemexObKeeper.ObWsData = _.isString(msg) ? JSON.parse(msg) : msg;
+      const res: PhemexObKeeper.ObWsData = typeof msg === 'string' ? JSON.parse(msg) : msg;
       const { book, symbol, type } = res;
       if (book) {
         this.onReceiveObRaw({
@@ -42,8 +41,8 @@ export class PhemexObKeeper extends GenericObKeeper {
   onReceiveObRaw(params: { pair: string; book: PhemexObKeeper.ObRes; type: 'incremental' | 'snapshot' }) {
     this.onReceiveOb({
       pair: params.pair,
-      bids: _.map(params.book.bids, phemexToStandardOb),
-      asks: _.map(params.book.asks, phemexToStandardOb),
+      bids: params.book.bids.map(phemexToStandardOb),
+      asks: params.book.asks.map(phemexToStandardOb),
       isNewSnapshot: params.type === 'snapshot',
     });
   }

@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { OrderBookSchema, OrderBookItem } from 'qs-typings';
 import { BaseKeeper } from './baseKeeper';
 /**
@@ -31,7 +30,7 @@ export class BitfinexObKeeper extends BaseKeeper {
 
   // if initial, return true
   onReceiveOb(pair: string, _data: number[][] | number[]): boolean {
-    const isInitial = _.isArray(_data) && _.isArray(_data[0]) && _.isNumber(_data[0][0]);
+    const isInitial = _data.length && (_data[0] as any).length && typeof (_data as number[][])[0][0] === 'number';
     if (isInitial) {
       this.obCache[pair] = _data.slice(0) as number[][];
       return true;
@@ -41,7 +40,7 @@ export class BitfinexObKeeper extends BaseKeeper {
         this.emit(`error`, errMsg);
         throw new Error(errMsg);
       }
-      if (!_.isNumber(_data[0])) {
+      if (typeof _data[0] !== 'number') {
         const errMsg = `invalid bitfinex ob keeper data, ${pair} data=${JSON.stringify(_data)}`;
         this.emit(`error`, errMsg);
         throw new Error(errMsg);
@@ -118,8 +117,8 @@ export class BitfinexObKeeper extends BaseKeeper {
     const orderbooks: OrderBookSchema = {
       ts: Date.now(),
       pair,
-      bids: _.filter(this.obCache[pair], ob => ob[2] > 0).map(this.formatOrderBookItem),
-      asks: _.filter(this.obCache[pair], ob => ob[2] < 0).map(this.formatOrderBookItem),
+      bids: this.obCache[pair] ? this.obCache[pair].filter(ob => ob[2] > 0).map(this.formatOrderBookItem) : [],
+      asks: this.obCache[pair] ? this.obCache[pair].filter(ob => ob[2] < 0).map(this.formatOrderBookItem) : [],
     };
     if (orderbooks.asks.length == 0 || orderbooks.bids.length === 0) {
       this.logger.error(`bitfinex invalid bids or asks this.obCache[pair] ${pair}`, this.obCache[pair]);

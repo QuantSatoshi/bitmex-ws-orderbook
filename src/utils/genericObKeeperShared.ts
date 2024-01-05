@@ -1,7 +1,6 @@
-import * as _ from 'lodash';
 import { OrderBookItem } from 'qs-typings';
 import { sortedFindFirstGreaterEqual, sortedFindFirstSmallerEqual } from 'qs-js-utils/dist/utils/searchUtils';
-
+import { last } from 'qs-js-utils';
 export class GenericObKeeperShared {
   // TODO: in c++ change storage to be plain array
   protected bids: OrderBookItem[] = [];
@@ -15,14 +14,14 @@ export class GenericObKeeperShared {
   onReceiveOb(params: { bids: OrderBookItem[]; asks: OrderBookItem[] }) {
     // deal with special cases, the bid cannot be greater than ask.
     if (params.asks.length > 0) {
-      const firstNonZeroAsk = _.find(params.asks, x => x.a > 0);
+      const firstNonZeroAsk = params.asks.find(x => x.a > 0);
       while (firstNonZeroAsk && this.bids.length > 0 && this.bids[0].r >= firstNonZeroAsk.r) {
         this.bids.splice(0, 1);
       }
     }
 
     if (params.bids.length > 0) {
-      const firstNonZeroBid = _.find(params.bids, bid => bid.a > 0);
+      const firstNonZeroBid = params.bids.find(bid => bid.a > 0);
       while (firstNonZeroBid && this.asks.length > 0 && this.asks[0].r <= firstNonZeroBid.r) {
         this.asks.splice(0, 1);
       }
@@ -41,9 +40,9 @@ export class GenericObKeeperShared {
         }
       } else {
         // if bid is too low than whole book, push at bottom
-        if (bid.r < _.last(this.bids)!.r) {
+        if (bid.r < last(this.bids)!.r) {
           bid.a > 0 && this.bids.push(bid);
-        } else if (bid.r > _.first(this.bids)!.r) {
+        } else if (bid.r > this.bids[0]!.r) {
           bid.a > 0 && this.bids.unshift(bid);
         } else {
           const foundIndex = sortedFindFirstSmallerEqual(this.bids, bid.r, b => b.r);
@@ -79,9 +78,9 @@ export class GenericObKeeperShared {
       if (this.asks.length === 0) {
         this.asks.push(ask);
       } else {
-        if (ask.r > _.last(this.asks)!.r) {
+        if (ask.r > last(this.asks)!.r) {
           ask.a > 0 && this.asks.push(ask);
-        } else if (ask.r < _.first(this.asks)!.r) {
+        } else if (ask.r < this.asks[0]!.r) {
           ask.a > 0 && this.asks.unshift(ask);
         } else {
           const foundIndex = sortedFindFirstGreaterEqual(this.asks, ask.r, a => a.r);

@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -33,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BitfinexObKeeper = void 0;
-const _ = __importStar(require("lodash"));
 const baseKeeper_1 = require("./baseKeeper");
 class BitfinexObKeeper extends baseKeeper_1.BaseKeeper {
     constructor() {
@@ -42,7 +18,7 @@ class BitfinexObKeeper extends baseKeeper_1.BaseKeeper {
     }
     // if initial, return true
     onReceiveOb(pair, _data) {
-        const isInitial = _.isArray(_data) && _.isArray(_data[0]) && _.isNumber(_data[0][0]);
+        const isInitial = _data.length && _data[0].length && typeof _data[0][0] === 'number';
         if (isInitial) {
             this.obCache[pair] = _data.slice(0);
             return true;
@@ -53,7 +29,7 @@ class BitfinexObKeeper extends baseKeeper_1.BaseKeeper {
                 this.emit(`error`, errMsg);
                 throw new Error(errMsg);
             }
-            if (!_.isNumber(_data[0])) {
+            if (typeof _data[0] !== 'number') {
                 const errMsg = `invalid bitfinex ob keeper data, ${pair} data=${JSON.stringify(_data)}`;
                 this.emit(`error`, errMsg);
                 throw new Error(errMsg);
@@ -134,8 +110,8 @@ class BitfinexObKeeper extends baseKeeper_1.BaseKeeper {
         const orderbooks = {
             ts: Date.now(),
             pair,
-            bids: _.filter(this.obCache[pair], ob => ob[2] > 0).map(this.formatOrderBookItem),
-            asks: _.filter(this.obCache[pair], ob => ob[2] < 0).map(this.formatOrderBookItem),
+            bids: this.obCache[pair] ? this.obCache[pair].filter(ob => ob[2] > 0).map(this.formatOrderBookItem) : [],
+            asks: this.obCache[pair] ? this.obCache[pair].filter(ob => ob[2] < 0).map(this.formatOrderBookItem) : [],
         };
         if (orderbooks.asks.length == 0 || orderbooks.bids.length === 0) {
             this.logger.error(`bitfinex invalid bids or asks this.obCache[pair] ${pair}`, this.obCache[pair]);

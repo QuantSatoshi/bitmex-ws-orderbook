@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -33,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GdaxObKeeper = void 0;
-const _ = __importStar(require("lodash"));
 const baseKeeper_1 = require("./baseKeeper");
 const genericObKeeperShared_1 = require("./utils/genericObKeeperShared");
 class GdaxObKeeper extends baseKeeper_1.BaseKeeper {
@@ -43,14 +19,14 @@ class GdaxObKeeper extends baseKeeper_1.BaseKeeper {
     }
     onSocketMessage(msg) {
         try {
-            const res = _.isString(msg) ? JSON.parse(msg) : msg;
+            const res = typeof msg === 'string' ? JSON.parse(msg) : msg;
             const { type, product_id: pair } = res;
             // this logic is similar with transaction_flow/ob_bitmex_fx.ts
             if (type === 'snapshot') {
                 this.onReceiveOb({
                     pair,
-                    bids: _.map(res.bids, b => this.convertToObSchema(b)),
-                    asks: _.map(res.asks, b => this.convertToObSchema(b)),
+                    bids: res.bids.map(b => this.convertToObSchema(b)),
+                    asks: res.asks.map(b => this.convertToObSchema(b)),
                 });
             }
             else if (type === 'l2update') {
@@ -86,7 +62,7 @@ class GdaxObKeeper extends baseKeeper_1.BaseKeeper {
     performObUpdate(data) {
         const pair = data.product_id;
         const { changes } = data;
-        _.each(changes, change => {
+        changes.forEach(change => {
             const side = change[0];
             const price = parseFloat(change[1]);
             const amount = parseFloat(change[2]);

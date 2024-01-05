@@ -1,6 +1,5 @@
 import { OrderBookItem, ObStreamShared } from 'qs-typings';
 import { GenericObKeeper } from './genericObKeeper';
-import * as _ from 'lodash';
 
 /*
 {
@@ -36,8 +35,8 @@ export class NormalizedObKeeper extends GenericObKeeper {
       this.onReceiveOb({
         isNewSnapshot: data.e === 's',
         pair: pair || data.pair || data.c.toString(),
-        bids: _.map(data.b, normalizedObToStandardOb),
-        asks: _.map(data.a, normalizedObToStandardOb),
+        bids: data.b ? data.b.map(normalizedObToStandardOb) : [],
+        asks: data.a ? data.a.map(normalizedObToStandardOb) : [],
       });
     } catch (e) {
       this.logger.error('onSocketMessage', e);

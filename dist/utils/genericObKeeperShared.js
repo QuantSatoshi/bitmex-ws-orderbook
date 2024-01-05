@@ -1,31 +1,8 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GenericObKeeperShared = void 0;
-const _ = __importStar(require("lodash"));
 const searchUtils_1 = require("qs-js-utils/dist/utils/searchUtils");
+const qs_js_utils_1 = require("qs-js-utils");
 class GenericObKeeperShared {
     constructor() {
         // TODO: in c++ change storage to be plain array
@@ -40,13 +17,13 @@ class GenericObKeeperShared {
     onReceiveOb(params) {
         // deal with special cases, the bid cannot be greater than ask.
         if (params.asks.length > 0) {
-            const firstNonZeroAsk = _.find(params.asks, x => x.a > 0);
+            const firstNonZeroAsk = params.asks.find(x => x.a > 0);
             while (firstNonZeroAsk && this.bids.length > 0 && this.bids[0].r >= firstNonZeroAsk.r) {
                 this.bids.splice(0, 1);
             }
         }
         if (params.bids.length > 0) {
-            const firstNonZeroBid = _.find(params.bids, bid => bid.a > 0);
+            const firstNonZeroBid = params.bids.find(bid => bid.a > 0);
             while (firstNonZeroBid && this.asks.length > 0 && this.asks[0].r <= firstNonZeroBid.r) {
                 this.asks.splice(0, 1);
             }
@@ -64,10 +41,10 @@ class GenericObKeeperShared {
             }
             else {
                 // if bid is too low than whole book, push at bottom
-                if (bid.r < _.last(this.bids).r) {
+                if (bid.r < (0, qs_js_utils_1.last)(this.bids).r) {
                     bid.a > 0 && this.bids.push(bid);
                 }
-                else if (bid.r > _.first(this.bids).r) {
+                else if (bid.r > this.bids[0].r) {
                     bid.a > 0 && this.bids.unshift(bid);
                 }
                 else {
@@ -106,10 +83,10 @@ class GenericObKeeperShared {
                 this.asks.push(ask);
             }
             else {
-                if (ask.r > _.last(this.asks).r) {
+                if (ask.r > (0, qs_js_utils_1.last)(this.asks).r) {
                     ask.a > 0 && this.asks.push(ask);
                 }
-                else if (ask.r < _.first(this.asks).r) {
+                else if (ask.r < this.asks[0].r) {
                     ask.a > 0 && this.asks.unshift(ask);
                 }
                 else {

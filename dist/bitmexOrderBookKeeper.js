@@ -33,7 +33,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BitmexOrderBookKeeper = void 0;
-const _ = __importStar(require("lodash"));
 const bitmex_request_1 = require("bitmex-request");
 const qsJsUtils = __importStar(require("qs-js-utils"));
 const parsingUtils_1 = require("./utils/parsingUtils");
@@ -41,6 +40,7 @@ const bitmexUtils_1 = require("./utils/bitmexUtils");
 const baseKeeper_1 = require("./baseKeeper");
 const qs_js_utils_1 = require("qs-js-utils");
 const orderdOrderbookUtils_1 = require("./utils/orderdOrderbookUtils");
+const { last } = qsJsUtils;
 // new method is much much faster than old one
 const USING_NEW_METHOD = true;
 class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
@@ -69,7 +69,7 @@ class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
     // either parsed object or raw text
     onSocketMessage(msg) {
         try {
-            const res = _.isString(msg) ? JSON.parse(msg) : msg;
+            const res = typeof msg === 'string' ? JSON.parse(msg) : msg;
             const { table, action, data } = res;
             // this logic is similar with transaction_flow/ob_bitmex_fx.ts
             if (table === 'orderBookL2_25' || table === 'orderBookL2') {
@@ -98,18 +98,18 @@ class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         }
         this.storedObs[pair] = this.storedObs[pair] || {};
         this.storedObsOrdered[pair] = this.storedObsOrdered[pair] || [];
-        if (_.includes(['partial', 'insert'], action)) {
+        if (['partial', 'insert'].includes(action)) {
             // first init, refresh ob data.
-            _.each(obRows, row => {
+            obRows.forEach(row => {
                 this.storedObs[pair][String(row.id)] = this.bitmexObToInternalOb(row);
                 const newRowRef = this.storedObs[pair][String(row.id)];
                 if (this.storedObsOrdered[pair].length === 0) {
                     this.storedObsOrdered[pair].push(newRowRef);
                 }
-                else if (row.price > _.last(this.storedObsOrdered[pair]).r) {
+                else if (row.price > last(this.storedObsOrdered[pair]).r) {
                     this.storedObsOrdered[pair].push(newRowRef);
                 }
-                else if (row.price < _.first(this.storedObsOrdered[pair]).r) {
+                else if (row.price < this.storedObsOrdered[pair][0].r) {
                     this.storedObsOrdered[pair].unshift(newRowRef);
                 }
                 else {
@@ -140,7 +140,7 @@ class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         }
         else if (action === 'update') {
             // if this order exists, we update it, otherwise don't worry
-            _.each(obRows, row => {
+            obRows.forEach(row => {
                 if (this.storedObs[pair][String(row.id)]) {
                     // must update one by one because update doesn't contain price
                     const obRowInternal = this.bitmexObToInternalOb(row);
@@ -177,7 +177,7 @@ class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
             });
         }
         else if (action === 'delete') {
-            _.each(obRows, row => {
+            obRows.forEach(row => {
                 if (this.storedObs[pair][String(row.id)]) {
                     const idx = this.storedObs[pair][String(row.id)].idx;
                     this.storedObsOrdered[pair][idx].a = 0;
@@ -200,13 +200,17 @@ class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
         if (!dataRaw)
             return null;
         // old method, slow
-        const bidsUnsortedRaw = _.filter(dataRaw, o => o.s === 0 && o.a > 0);
-        const askUnsortedRaw = _.filter(dataRaw, o => o.s === 1 && o.a > 0);
-        const bids = _.map((0, parsingUtils_1.sortByDesc)(bidsUnsortedRaw, 'r').slice(0, depth), d => ({
+        const bidsUnsortedRaw = Object.values(dataRaw).filter(o => o.s === 0 && o.a > 0);
+        const askUnsortedRaw = Object.values(dataRaw).filter(o => o.s === 1 && o.a > 0);
+        const bids = (0, parsingUtils_1.sortByDesc)(bidsUnsortedRaw, 'r')
+            .slice(0, depth)
+            .map(d => ({
             r: d.r,
             a: d.a,
         }));
-        const asks = _.map((0, parsingUtils_1.sortByAsc)(askUnsortedRaw, 'r').slice(0, depth), d => ({
+        const asks = (0, parsingUtils_1.sortByAsc)(askUnsortedRaw, 'r')
+            .slice(0, depth)
+            .map(d => ({
             r: d.r,
             a: d.a,
         }));
@@ -227,10 +231,10 @@ class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
             const { bids, asks } = (0, orderdOrderbookUtils_1.buildFromOrderedOb)({ bidI, askI, depth, storedObsOrdered: this.storedObsOrdered[pair] });
             if (this.verifyWithOldMethod) {
                 const oldOb = this.getOrderBookWsOld(pair, depth);
-                if (_.get(oldOb.asks[0], 'r') !== _.get(asks[0], 'r')) {
+                if (oldOb.asks[0].r !== asks[0].r) {
                     console.error(`unmatching ob asks`, oldOb.asks, asks);
                 }
-                if (_.get(oldOb.bids[0], 'r') !== _.get(bids[0], 'r')) {
+                if (oldOb.bids[0].r !== bids[0].r) {
                     console.error(`unmatching ob bids`, oldOb.bids, bids);
                 }
             }
@@ -256,7 +260,7 @@ class BitmexOrderBookKeeper extends baseKeeper_1.BaseKeeper {
     }
     pollOrderBook(pairEx) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.bitmexRequest.pollOrderBook(pairEx);
+            return (yield this.bitmexRequest.pollOrderBook(pairEx));
         });
     }
     // Get WS ob, and fall back to poll. also verify ws ob with poll ob
