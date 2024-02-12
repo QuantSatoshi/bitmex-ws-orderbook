@@ -105,6 +105,12 @@ export class GenericObKeeperShared {
         }
       }
     }
+    if (this.bids.length > 100) {
+      this.bids = this.bids.slice(0, 100);
+    }
+    if (this.asks.length > 100) {
+      this.asks = this.asks.slice(0, 100);
+    }
   }
 
   getOb(depth?: number) {
