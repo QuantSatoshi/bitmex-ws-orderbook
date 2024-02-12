@@ -33,7 +33,7 @@ export class NormalizedObKeeper extends GenericObKeeper {
   onData(data: ObStreamShared, pair?: string) {
     try {
       this.onReceiveOb({
-        isNewSnapshot: data.e === 's',
+        isNewSnapshot: data.e && data.e[0] === 's',
         pair: pair || data.pair || data.c.toString(),
         bids: data.b ? data.b.map(normalizedObToStandardOb) : [],
         asks: data.a ? data.a.map(normalizedObToStandardOb) : [],

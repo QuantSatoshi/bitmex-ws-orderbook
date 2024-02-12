@@ -33,7 +33,7 @@ class NormalizedObKeeper extends genericObKeeper_1.GenericObKeeper {
     onData(data, pair) {
         try {
             this.onReceiveOb({
-                isNewSnapshot: data.e === 's',
+                isNewSnapshot: data.e && data.e[0] === 's',
                 pair: pair || data.pair || data.c.toString(),
                 bids: data.b ? data.b.map(normalizedObToStandardOb) : [],
                 asks: data.a ? data.a.map(normalizedObToStandardOb) : [],
