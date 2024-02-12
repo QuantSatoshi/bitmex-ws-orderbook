@@ -20,8 +20,10 @@ export class GenericObKeeper extends BaseKeeper {
     if (isNewSnapshot) {
       this.obKeepers[pair].init();
     }
-    const bids = this.maxLevels ? params.bids.slice(0, this.maxLevels) : params.bids;
-    const asks = this.maxLevels ? params.asks.slice(0, this.maxLevels) : params.asks;
+    const bids =
+      this.maxLevels && params.bids.length > this.maxLevels ? params.bids.slice(0, this.maxLevels) : params.bids;
+    const asks =
+      this.maxLevels && params.asks.length > this.maxLevels ? params.asks.slice(0, this.maxLevels) : params.asks;
     this.obKeepers[pair].onReceiveOb({ bids, asks });
 
     this.emitOrderbookEvent(pair);
