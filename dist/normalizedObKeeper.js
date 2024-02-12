@@ -36,7 +36,7 @@ exports.normalizedObToStandardObStr = normalizedObToStandardObStr;
 class NormalizedObKeeper extends genericObKeeper_1.GenericObKeeper {
     onData(data, pair) {
         try {
-            const isString = data.b ? typeof data.b[0] === 'string' : typeof (data.a && data.a[0]) === 'string';
+            const isString = data.b && data.b[0] ? typeof data.b[0][0] === 'string' : typeof (data.a && data.a[0] && data.a[0][0]) === 'string';
             const converter = isString ? normalizedObToStandardObStr : normalizedObToStandardOb;
             this.onReceiveOb({
                 isNewSnapshot: data.e && data.e[0] === 's',
