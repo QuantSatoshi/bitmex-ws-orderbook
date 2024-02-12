@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NormalizedObKeeper = exports.normalizedObToStandardOb = void 0;
+exports.NormalizedObKeeper = exports.normalizedObToStandardObStr = exports.normalizedObToStandardOb = void 0;
 const genericObKeeper_1 = require("./genericObKeeper");
 /*
 {
@@ -29,14 +29,20 @@ function normalizedObToStandardOb(v) {
     return { r: v[0], a: v[1] };
 }
 exports.normalizedObToStandardOb = normalizedObToStandardOb;
+function normalizedObToStandardObStr(v) {
+    return { r: parseFloat(v[0]), a: parseFloat(v[1]) };
+}
+exports.normalizedObToStandardObStr = normalizedObToStandardObStr;
 class NormalizedObKeeper extends genericObKeeper_1.GenericObKeeper {
     onData(data, pair) {
         try {
+            const isString = data.b ? typeof data.b[0] === 'string' : typeof (data.a && data.a[0]) === 'string';
+            const converter = isString ? normalizedObToStandardObStr : normalizedObToStandardOb;
             this.onReceiveOb({
                 isNewSnapshot: data.e && data.e[0] === 's',
                 pair: pair || data.pair || data.c.toString(),
-                bids: data.b ? data.b.map(normalizedObToStandardOb) : [],
-                asks: data.a ? data.a.map(normalizedObToStandardOb) : [],
+                bids: data.b ? data.b.map(converter) : [],
+                asks: data.a ? data.a.map(converter) : [],
             });
         }
         catch (e) {

@@ -28,15 +28,19 @@ import { GenericObKeeper } from './genericObKeeper';
 export function normalizedObToStandardOb(v: number[]): OrderBookItem {
   return { r: v[0], a: v[1] };
 }
-
+export function normalizedObToStandardObStr(v: any[]): OrderBookItem {
+  return { r: parseFloat(v[0]), a: parseFloat(v[1]) };
+}
 export class NormalizedObKeeper extends GenericObKeeper {
   onData(data: ObStreamShared, pair?: string) {
     try {
+      const isString = data.b ? typeof data.b[0] === 'string' : typeof (data.a && data.a[0]) === 'string';
+      const converter = isString ? normalizedObToStandardObStr : normalizedObToStandardOb;
       this.onReceiveOb({
         isNewSnapshot: data.e && data.e[0] === 's',
         pair: pair || data.pair || data.c.toString(),
-        bids: data.b ? data.b.map(normalizedObToStandardOb) : [],
-        asks: data.a ? data.a.map(normalizedObToStandardOb) : [],
+        bids: data.b ? data.b.map(converter) : [],
+        asks: data.a ? data.a.map(converter) : [],
       });
     } catch (e) {
       this.logger.error('onSocketMessage', e);
