@@ -2897,10 +2897,10 @@ qs-js-utils@0.0.42:
   dependencies:
     byline "^5.0.0"
 
-qs-typings@0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/qs-typings/-/qs-typings-0.3.2.tgz#52845deb09fa11eb4b627bb58a44864a8fc7c231"
-  integrity sha512-uwslPRoujMf9Q04dg7uJAPQKMMmcUqfOVsdZZf9i8cZ1NWshySfymKwO01WNK9Z8gOCWmZqJBK3YYzsxzxvnFw==
+qs-typings@0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/qs-typings/-/qs-typings-0.3.6.tgz#d2b743b135b2661e6642c53a19be46fad694d1cf"
+  integrity sha512-33zXG9/YQbzXzSZaQ+sFgFj91zaC3n1FMMvsX6SZihZc/SOCTlecgchNNBHecGtdBWhZUjGF2w2Tt5ZjVNJk3g==
 
 qs@~6.5.2:
   version "6.5.3"
